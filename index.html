@@ -125,6 +125,9 @@ dialog#about::backdrop{background:rgba(0,0,0,.5)}
 #qr-box{margin-top:10px;display:flex;justify-content:center}#qr-box img,#qr-box canvas{background:#fff;padding:8px;border-radius:8px}
 .demo-hl{outline:3px solid var(--accent);outline-offset:4px;transition:outline-color .3s}
 @media (prefers-reduced-motion:reduce){.cap{transition:none}}
+#pastp .pq{display:inline-flex;gap:6px;flex-wrap:wrap}
+#pastp{flex-wrap:wrap}
+#scen:disabled,#wx button:disabled{opacity:.45;cursor:not-allowed}
 .zlv{position:absolute;left:10px;bottom:10px;font-size:12px;color:var(--ink2);background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:2px 8px;z-index:2}
 .crumb{display:flex;flex-wrap:wrap;align-items:center;gap:4px;padding:6px 8px 2px;font-size:14px}
 .crumb button{border:0;background:transparent;padding:2px 6px;border-radius:6px;color:var(--accent)}
@@ -230,11 +233,12 @@ select.sel{background:var(--panel);border:1px solid var(--line);border-radius:8p
   <div class="seg" role="group" aria-label="보기 방식">
     <button id="m-live" aria-pressed="true">실시간</button>
     <button id="m-fast" aria-pressed="false">빠르게 보기</button>
-    <button id="m-man" aria-pressed="false">시간 선택</button>
+    <button id="m-man" aria-pressed="false">시간 선택</button><button id="m-past" aria-pressed="false">지난 기록</button>
   </div>
   <input class="search" id="q" list="ql" data-ip="q" placeholder="역이나 동 이름 검색 (예: 강남역, 서교동)" aria-label="역이나 동 이름 검색">
   <datalist id="ql"></datalist><span class="err" id="qerr"></span>
   <label id="fest-l"><input type="checkbox" id="fest"> <span data-i="fest">오늘은 축제·행사일</span></label>
+  <div class="manual" id="pastp"><input type="date" id="pd" class="search" style="min-width:150px;max-width:170px" aria-label="date"><input type="range" id="phr" min="0" max="23" step="1" value="21" aria-label="hour" style="max-width:220px"><span id="phr-out" style="font-weight:500;min-width:40px">21시</span><span class="pq"><button class="chip" data-q="y">어제</button><button class="chip" data-q="h">지난 핼러윈</button><button class="chip" data-q="f">지난 불꽃축제</button><button class="chip" data-q="n">지난 연말</button></span><span id="pinfo" class="sub" style="margin:0;font-size:13px;width:100%"></span></div>
   <div class="manual" id="manual">
     <div class="seg" role="group" aria-label="날짜 유형">
       <button data-d="0" aria-pressed="true" data-i="d0">평일</button><button data-d="1" aria-pressed="false" data-i="d1">주말</button><button data-d="2" aria-pressed="false" data-i="d2">축제·행사일</button>
@@ -327,14 +331,14 @@ function colorize(G){const nb=topojson.neighbors(G);const ord=G.map((g,i)=>i).so
 colorize(PG);colorize(MG);colorize(DG);
 const RPAL=['#2a78d6','#eb6834','#1baf7a','#eda100','#e87ba4','#6250d6','#4f8a10','#8a6d3b','#14a3b8','#b55db0'];
 const I18N={
-ko:{today:{title:'오늘의 안전 안내',hd:(n,x)=>`오늘은 ${n}곳에서 위험이 예상됩니다. 특히 ${x} 주변을 조심하세요.`,hw:(n,x)=>`오늘은 ${n}곳에서 혼잡(경고)이 예상됩니다. ${x} 주변을 조심하세요.`,hn:x=>`오늘은 큰 혼잡이 예상되지 않습니다. 가장 붐빌 곳은 ${x}입니다.`,win:(a,b)=>a===b?`${a}시`:`${a}~${b}시`,when:(w,v)=>`${w} 최고 ${v}명/㎡`,adv:['평소 수준이에요','조금 붐빌 수 있어요','이 시간대는 피해서 방문하세요','이 시간대 방문을 피하고 우회하세요'],upt:'다가오는 주의일 (앞으로 2주)',upi:(d,c,x,v)=>`${d} ${c} · ${x} 최고 ${v}명/㎡ 예상`,upn:'앞으로 2주 동안 특별히 위험한 날은 없어요.',note:'날짜·요일·공휴일·행사 일정과 선택한 날씨·상황을 바탕으로 한 예상입니다.'},narrow:'좁은 골목이라 같은 인원도 더 빨리 위험해집니다',alarmb:n=>`위험 구역 ${n}곳`,per:['지금만','최근 1일','최근 1주','최근 1개월','최근 3개월','최근 6개월','최근 1년'],hist:{title:p=>`${p} 이 경로의 혼잡 기록`,stat:(dh,dd,wh)=>`위험 ${dh}시간(${dd}일) · 경고 ${wh}시간`,worst:(d,h,v,c)=>`가장 붐볐던 때: ${d} ${h}시, ${v}명/㎡ (${c})`,best:(h,v)=>`평소 가장 한산한 시간대: ${h}시 (평균 ${v}명/㎡)`,hol:'공휴일',nodata:'경로 주변에 주요 장소가 없어 과거 혼잡 기록이 거의 없습니다.',hourly:'시간별 최고 밀집도',daily:'일별 최고 밀집도',chart:'과거 혼잡 기록 차트',note:'과거 기록은 요일·공휴일·계절·날씨·행사 일정을 반영해 만든 시연용 가상 데이터입니다.'},newb:'2026 신규',listA:'장소 안내 (시·군·구별 가나다순)',busF:'예측 시각에 가장 붐빌 곳',nowv:'지금',fcl:['지금','30분 뒤','1시간 뒤'],fcb:(ts,n)=>`${ts} 예측 지도`+(n?` · 위험 예상 ${n}곳`:''),lv:['안전','주의','경고','위험'],dn:['평일','주말','축제·행사일'],wd:['일','월','화','수','목','금','토'],tn:{c:'역세권·업무지구',n:'번화가',t:'관광·쇼핑',b:'해변·공원',v:'공연장·경기장',x:'환승역·터미널',m:'전통시장·좁은 골목',i:'대형 쇼핑몰·실내',u:'대학가'},
+ko:{pq:['어제','지난 핼러윈','지난 불꽃축제','지난 연말'],pastLabel:(p,c)=>`${p.y}.${p.m}.${p.d}(${WD[p.dow]}) ${c} 기록`,pastNote:'지난 기록에는 그날의 요일·공휴일·계절·행사·날씨가 적용돼요. 상황과 날씨 선택은 쓰지 않아요. (시연용 가상 데이터)',today:{title:'오늘의 안전 안내',hd:(n,x)=>`오늘은 ${n}곳에서 위험이 예상됩니다. 특히 ${x} 주변을 조심하세요.`,hw:(n,x)=>`오늘은 ${n}곳에서 혼잡(경고)이 예상됩니다. ${x} 주변을 조심하세요.`,hn:x=>`오늘은 큰 혼잡이 예상되지 않습니다. 가장 붐빌 곳은 ${x}입니다.`,win:(a,b)=>a===b?`${a}시`:`${a}~${b}시`,when:(w,v)=>`${w} 최고 ${v}명/㎡`,adv:['평소 수준이에요','조금 붐빌 수 있어요','이 시간대는 피해서 방문하세요','이 시간대 방문을 피하고 우회하세요'],upt:'다가오는 주의일 (앞으로 2주)',upi:(d,c,x,v)=>`${d} ${c} · ${x} 최고 ${v}명/㎡ 예상`,upn:'앞으로 2주 동안 특별히 위험한 날은 없어요.',note:'날짜·요일·공휴일·행사 일정과 선택한 날씨·상황을 바탕으로 한 예상입니다.'},narrow:'좁은 골목이라 같은 인원도 더 빨리 위험해집니다',alarmb:n=>`위험 구역 ${n}곳`,per:['지금만','최근 1일','최근 1주','최근 1개월','최근 3개월','최근 6개월','최근 1년'],hist:{title:p=>`${p} 이 경로의 혼잡 기록`,stat:(dh,dd,wh)=>`위험 ${dh}시간(${dd}일) · 경고 ${wh}시간`,worst:(d,h,v,c)=>`가장 붐볐던 때: ${d} ${h}시, ${v}명/㎡ (${c})`,best:(h,v)=>`평소 가장 한산한 시간대: ${h}시 (평균 ${v}명/㎡)`,hol:'공휴일',nodata:'경로 주변에 주요 장소가 없어 과거 혼잡 기록이 거의 없습니다.',hourly:'시간별 최고 밀집도',daily:'일별 최고 밀집도',chart:'과거 혼잡 기록 차트',note:'과거 기록은 요일·공휴일·계절·날씨·행사 일정을 반영해 만든 시연용 가상 데이터입니다.'},newb:'2026 신규',listA:'장소 안내 (시·군·구별 가나다순)',busF:'예측 시각에 가장 붐빌 곳',nowv:'지금',fcl:['지금','30분 뒤','1시간 뒤'],fcb:(ts,n)=>`${ts} 예측 지도`+(n?` · 위험 예상 ${n}곳`:''),lv:['안전','주의','경고','위험'],dn:['평일','주말','축제·행사일'],wd:['일','월','화','수','목','금','토'],tn:{c:'역세권·업무지구',n:'번화가',t:'관광·쇼핑',b:'해변·공원',v:'공연장·경기장',x:'환승역·터미널',m:'전통시장·좁은 골목',i:'대형 쇼핑몰·실내',u:'대학가'},
  u:'명/㎡',hf:h=>h+'시',hs:h=>h+'시',date:(mo,d,wd,dn)=>`${mo}월 ${d}일 (${wd}) ${dn}`,man:(dn,h)=>`${dn} ${h}시 기준`,fast:(wd,dn)=>`빠르게 보기 (${wd}) ${dn}`,
  toast:(lvn,n,v,b)=>`${lvn} 알림: ${n} ${v}명/㎡. ${b===3?'진입을 자제하고 우회하세요.':'혼잡에 주의하세요.'}`,
  zoom:(k,mt)=>`${k}배 · 화면 100px ≈ ${mt}`,zb:' · 블록(50m) 단위',zh:' · 상세 히트맵',zm:' · 시·군·구 표시',zd:' · 동 단위 표시',
  nat:'전국',hint:['시·도를 누르면 시·군·구로 확대됩니다.','시·군·구나 장소를 누르면 동 단위로 확대됩니다. 붐비는 곳은 이름이 함께 표시됩니다.','동이나 역을 누르면 상세 정보가 표시됩니다. 주변 지역을 누르면 이동합니다.'],
  snd:'표시 동',snp:'표시 장소',trend:'증가 예상',norank:'이 지역에는 주요 장소가 없습니다.',nolog:'아직 등급이 바뀐 곳이 없습니다.',res:'생활권',next1:'1시간 뒤 예상',
  around:'역 주변 반경 약 100m 구역별 밀집도',dir:['북쪽','중심','남쪽','서쪽','동쪽'],starOn:'★ 관심 장소',starOff:'☆ 관심 장소로 추가',spark0:'5초마다 기록이 쌓입니다',
- qerr:'찾는 역이나 동이 없습니다. 다른 이름으로 검색하세요.',mode:['실시간','빠르게 보기','시간 선택'],rm:['출','도'],
+ qerr:'찾는 역이나 동이 없습니다. 다른 이름으로 검색하세요.',mode:['실시간','빠르게 보기','시간 선택','지난 기록'],rm:['출','도'],
  rhead:(a,b,k)=>`<b>${a} → ${b}</b> (직선 약 ${k}km)`,rsafe:(v,l)=>`경로 주변 최대 밀집도 ${v}명/㎡ (${l}). 지금은 안전하게 이동할 수 있습니다.`,rrisk:(l,s)=>`경로 주변 ${l} 구역: ${s}`,
  rdet:(v,l)=>`실선으로 표시된 우회 경로를 추천합니다. 우회하면 최대 밀집도가 ${v}명/㎡ (${l})로 낮아집니다.`,rnodet:'주변이 모두 혼잡해 우회 경로를 찾지 못했습니다. 출발 시간을 늦추는 것을 권장합니다.',
  rdemo:'시연용 직선 경로입니다. 실제 서비스에서는 지도 API의 도로 경로로 계산합니다.',rerr:'출발지와 도착지를 목록에서 골라 주세요.',next:s=>`다음 갱신 ${s}초`,
@@ -345,14 +349,14 @@ ko:{today:{title:'오늘의 안전 안내',hd:(n,x)=>`오늘은 ${n}곳에서 �
   route:'경로 안전 확인',from:'출발 (예: 이태원역)',to:'도착 (예: 서울역)',rgo:'경로 확인',rclr:'지우기',lg0:'안전 2 미만',lg1:'주의 2~4',lg2:'경고 4~5',lg3:'위험 5 이상',unit:'단위 명/㎡',
   cmnote:'지도 색은 지역을 구분하고, 점 색은 밀집도 등급을 나타냅니다. 이웃한 지역끼리는 서로 다른 색이 칠해집니다.',recent:'최근 5분 변화',today:'오늘 시간대별 예상 밀집도',warn:'경고',danger:'위험',busiest:'지금 가장 붐비는 곳',log:'등급 변경 알림',
   note:'졸업 작품 시연용 화면입니다. 밀집도는 장소 유형별 시간대 패턴에 실시간 변동을 더한 가상 데이터이며, 실제 시스템에서는 CCTV 영상 분석 결과로 대체됩니다. 경계는 2026년 7월 행정동 기준(공개 데이터 vuski/admdongkor)이고, 장소 위치는 대략적인 좌표라 실제 위치와 조금 다를 수 있습니다.'}},
-en:{today:{title:"Today's safety guide",hd:(n,x)=>`Danger expected at ${n} place${n>1?'s':''} today. Take extra care around ${x}.`,hw:(n,x)=>`Crowding (warning) expected at ${n} place${n>1?'s':''} today. Take care around ${x}.`,hn:x=>`No major crowding expected today. Busiest: ${x}.`,win:(a,b)=>a===b?`${a}:00`:`${a}:00–${b}:00`,when:(w,v)=>`Peak ${v} people/m² at ${w}`,adv:['Normal levels','May get a little busy','Avoid visiting during these hours','Avoid this area at these hours and take a detour'],upt:'Upcoming days to watch (next 2 weeks)',upi:(d,c,x,v)=>`${d} ${c} · ${x} up to ${v} people/m²`,upn:'No especially risky days in the next two weeks.',note:'Forecast based on date, weekday, holidays, events and the selected weather and scenario.'},narrow:'Narrow alleys: risk rises faster with the same crowd',alarmb:n=>`${n} danger zone${n>1?'s':''}`,per:['Now only','Past day','Past week','Past month','Past 3 months','Past 6 months','Past year'],hist:{title:p=>`${p}: crowd history on this route`,stat:(dh,dd,wh)=>`Danger ${dh}h (${dd} days) · Warning ${wh}h`,worst:(d,h,v,c)=>`Most crowded: ${d} ${h}:00, ${v} people/m² (${c})`,best:(h,v)=>`Usually quietest at ${h}:00 (avg ${v} people/m²)`,hol:'Holiday',nodata:'There are no key places near this route, so there is little crowd history.',hourly:'Hourly peak density',daily:'Daily peak density',chart:'Crowd history chart',note:'Past records are simulated from weekdays, holidays, seasons, weather and events for this demo.'},newb:'New 2026',listA:'Places by district (A–Z)',busF:'Busiest at the forecast time',nowv:'Now',fcl:['Now','In 30 min','In 1 hour'],fcb:(ts,n)=>`Forecast for ${ts}`+(n?` · ${n} danger zone${n>1?'s':''} expected`:''),lv:['Safe','Caution','Warning','Danger'],dn:['Weekday','Weekend','Festival day'],wd:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],tn:{c:'Station & business area',n:'Nightlife district',t:'Sights & shopping',b:'Beach & park',v:'Venue & stadium',x:'Transfer hub & terminal',m:'Market & narrow alley',i:'Mall & indoor',u:'University area'},
+en:{pq:['Yesterday','Last Halloween','Last fireworks',"Last New Year's Eve"],pastLabel:(p,c)=>`Record: ${p.y}-${p.m}-${p.d} (${WD[p.dow]}) ${c}`,pastNote:'History uses that day’s weekday, holidays, season, events and weather; the scenario and weather selectors are off. (Simulated demo data)',today:{title:"Today's safety guide",hd:(n,x)=>`Danger expected at ${n} place${n>1?'s':''} today. Take extra care around ${x}.`,hw:(n,x)=>`Crowding (warning) expected at ${n} place${n>1?'s':''} today. Take care around ${x}.`,hn:x=>`No major crowding expected today. Busiest: ${x}.`,win:(a,b)=>a===b?`${a}:00`:`${a}:00–${b}:00`,when:(w,v)=>`Peak ${v} people/m² at ${w}`,adv:['Normal levels','May get a little busy','Avoid visiting during these hours','Avoid this area at these hours and take a detour'],upt:'Upcoming days to watch (next 2 weeks)',upi:(d,c,x,v)=>`${d} ${c} · ${x} up to ${v} people/m²`,upn:'No especially risky days in the next two weeks.',note:'Forecast based on date, weekday, holidays, events and the selected weather and scenario.'},narrow:'Narrow alleys: risk rises faster with the same crowd',alarmb:n=>`${n} danger zone${n>1?'s':''}`,per:['Now only','Past day','Past week','Past month','Past 3 months','Past 6 months','Past year'],hist:{title:p=>`${p}: crowd history on this route`,stat:(dh,dd,wh)=>`Danger ${dh}h (${dd} days) · Warning ${wh}h`,worst:(d,h,v,c)=>`Most crowded: ${d} ${h}:00, ${v} people/m² (${c})`,best:(h,v)=>`Usually quietest at ${h}:00 (avg ${v} people/m²)`,hol:'Holiday',nodata:'There are no key places near this route, so there is little crowd history.',hourly:'Hourly peak density',daily:'Daily peak density',chart:'Crowd history chart',note:'Past records are simulated from weekdays, holidays, seasons, weather and events for this demo.'},newb:'New 2026',listA:'Places by district (A–Z)',busF:'Busiest at the forecast time',nowv:'Now',fcl:['Now','In 30 min','In 1 hour'],fcb:(ts,n)=>`Forecast for ${ts}`+(n?` · ${n} danger zone${n>1?'s':''} expected`:''),lv:['Safe','Caution','Warning','Danger'],dn:['Weekday','Weekend','Festival day'],wd:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],tn:{c:'Station & business area',n:'Nightlife district',t:'Sights & shopping',b:'Beach & park',v:'Venue & stadium',x:'Transfer hub & terminal',m:'Market & narrow alley',i:'Mall & indoor',u:'University area'},
  u:' people/m²',hf:h=>h+':00',hs:h=>h+'h',date:(mo,d,wd,dn)=>`${['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][mo-1]} ${d} (${wd}) ${dn}`,man:(dn,h)=>`${dn}, as of ${h}:00`,fast:(wd,dn)=>`Fast forward (${wd}) ${dn}`,
  toast:(lvn,n,v,b)=>`${lvn} alert: ${n} ${v} people/m². ${b===3?'Avoid entering and take a detour.':'Watch out for crowding.'}`,
  zoom:(k,mt)=>`${k}× · 100px ≈ ${mt}`,zb:' · 50m blocks',zh:' · Detailed heatmap',zm:' · Districts',zd:' · Neighborhoods',
  nat:'Korea',hint:['Tap a province to zoom into its districts.','Tap a district or place to zoom to neighborhoods. Busy places show their names.','Tap a neighborhood or station for details. Tap a nearby area to move there.'],
  snd:'Areas shown',snp:'Places shown',trend:'Rising',norank:'No key places in this area.',nolog:'No level changes yet.',res:'residential area',next1:'In 1 hour',
  around:'Density within ~100m of the station',dir:['North','Center','South','West','East'],starOn:'★ Saved',starOff:'☆ Save place',spark0:'Recording every 5 seconds',
- qerr:'No matching station or area. Try another name.',mode:['Live','Fast forward','Pick a time'],rm:['A','B'],
+ qerr:'No matching station or area. Try another name.',mode:['Live','Fast forward','Pick a time','History'],rm:['A','B'],
  rhead:(a,b,k)=>`<b>${a} → ${b}</b> (about ${k} km in a straight line)`,rsafe:(v,l)=>`Max density near the route: ${v} people/m² (${l}). You can travel safely now.`,rrisk:(l,s)=>`${l} zones near the route: ${s}`,
  rdet:(v,l)=>`We recommend the detour shown as a solid line. It lowers the max density to ${v} people/m² (${l}).`,rnodet:'The whole area is crowded and no detour was found. Consider leaving later.',
  rdemo:'Straight-line demo route. The real service will calculate road routes with a map API.',rerr:'Choose a start and a destination from the list.',next:s=>`Next update in ${s}s`,
@@ -363,14 +367,14 @@ en:{today:{title:"Today's safety guide",hd:(n,x)=>`Danger expected at ${n} place
   route:'Route safety check',from:'From (e.g. Itaewon Station)',to:'To (e.g. Seoul Station)',rgo:'Check route',rclr:'Clear',lg0:'Safe under 2',lg1:'Caution 2–4',lg2:'Warning 4–5',lg3:'Danger 5+',unit:'Unit: people/m²',
   cmnote:'Map colors separate regions; dot colors show density levels. Neighboring regions always get different colors.',recent:'Last 5 minutes',today:'Hourly forecast for today',warn:'Warning',danger:'Danger',busiest:'Busiest right now',log:'Level change alerts',
   note:'Demo screen for a graduation project. Densities are simulated from hourly patterns by place type plus live fluctuation; the real system replaces them with CCTV video analysis. Boundaries follow administrative dongs as of July 2026 (open data: vuski/admdongkor), and place markers are approximate.'}},
-zh:{today:{title:'今日安全提示',hd:(n,x)=>`今天预计有${n}处危险，请特别注意${x}周边。`,hw:(n,x)=>`今天预计有${n}处拥挤（警告），请注意${x}周边。`,hn:x=>`今天预计不会严重拥挤。最拥挤的是${x}。`,win:(a,b)=>a===b?`${a}点`:`${a}~${b}点`,when:(w,v)=>`${w} 最高${v}人/㎡`,adv:['平常水平','可能稍显拥挤','请避开该时段前往','请避开该时段并绕行'],upt:'即将到来的注意日（未来2周）',upi:(d,c,x,v)=>`${d} ${c} · ${x} 预计最高${v}人/㎡`,upn:'未来两周没有特别危险的日子。',note:'根据日期、星期、节假日、活动日程及所选天气和场景得出的预测。'},narrow:'巷道狭窄，同样人数也会更快变危险',alarmb:n=>`危险区域${n}处`,per:['仅现在','最近1天','最近1周','最近1个月','最近3个月','最近6个月','最近1年'],hist:{title:p=>`${p} 该路线拥挤记录`,stat:(dh,dd,wh)=>`危险${dh}小时（${dd}天）· 警告${wh}小时`,worst:(d,h,v,c)=>`最拥挤：${d} ${h}点，${v}人/㎡（${c}）`,best:(h,v)=>`平时最空闲时段：${h}点（平均${v}人/㎡）`,hol:'节假日',nodata:'路线周边没有主要地点，几乎没有历史拥挤记录。',hourly:'每小时最高密度',daily:'每日最高密度',chart:'历史拥挤记录图',note:'历史记录为结合星期、节假日、季节、天气和活动日程生成的演示用模拟数据。'},newb:'2026新增',listA:'地点列表（按市郡区·字母）',busF:'预测时段最拥挤的地方',nowv:'现在',fcl:['现在','30分钟后','1小时后'],fcb:(ts,n)=>`${ts} 预测地图`+(n?` · 预计${n}处危险`:''),lv:['安全','注意','警告','危险'],dn:['工作日','周末','节庆日'],wd:['周日','周一','周二','周三','周四','周五','周六'],tn:{c:'车站·商务区',n:'繁华街区',t:'观光·购物',b:'海滩·公园',v:'演出场馆·体育场',x:'换乘站·客运站',m:'传统市场·窄巷',i:'大型商场·室内',u:'大学周边'},
+zh:{pq:['昨天','上次万圣节','上次烟花节','上次跨年'],pastLabel:(p,c)=>`${p.y}.${p.m}.${p.d}（${WD[p.dow]}）${c} 记录`,pastNote:'历史记录会套用当天的星期、节假日、季节、活动和天气，不使用场景和天气选项。（演示用模拟数据）',today:{title:'今日安全提示',hd:(n,x)=>`今天预计有${n}处危险，请特别注意${x}周边。`,hw:(n,x)=>`今天预计有${n}处拥挤（警告），请注意${x}周边。`,hn:x=>`今天预计不会严重拥挤。最拥挤的是${x}。`,win:(a,b)=>a===b?`${a}点`:`${a}~${b}点`,when:(w,v)=>`${w} 最高${v}人/㎡`,adv:['平常水平','可能稍显拥挤','请避开该时段前往','请避开该时段并绕行'],upt:'即将到来的注意日（未来2周）',upi:(d,c,x,v)=>`${d} ${c} · ${x} 预计最高${v}人/㎡`,upn:'未来两周没有特别危险的日子。',note:'根据日期、星期、节假日、活动日程及所选天气和场景得出的预测。'},narrow:'巷道狭窄，同样人数也会更快变危险',alarmb:n=>`危险区域${n}处`,per:['仅现在','最近1天','最近1周','最近1个月','最近3个月','最近6个月','最近1年'],hist:{title:p=>`${p} 该路线拥挤记录`,stat:(dh,dd,wh)=>`危险${dh}小时（${dd}天）· 警告${wh}小时`,worst:(d,h,v,c)=>`最拥挤：${d} ${h}点，${v}人/㎡（${c}）`,best:(h,v)=>`平时最空闲时段：${h}点（平均${v}人/㎡）`,hol:'节假日',nodata:'路线周边没有主要地点，几乎没有历史拥挤记录。',hourly:'每小时最高密度',daily:'每日最高密度',chart:'历史拥挤记录图',note:'历史记录为结合星期、节假日、季节、天气和活动日程生成的演示用模拟数据。'},newb:'2026新增',listA:'地点列表（按市郡区·字母）',busF:'预测时段最拥挤的地方',nowv:'现在',fcl:['现在','30分钟后','1小时后'],fcb:(ts,n)=>`${ts} 预测地图`+(n?` · 预计${n}处危险`:''),lv:['安全','注意','警告','危险'],dn:['工作日','周末','节庆日'],wd:['周日','周一','周二','周三','周四','周五','周六'],tn:{c:'车站·商务区',n:'繁华街区',t:'观光·购物',b:'海滩·公园',v:'演出场馆·体育场',x:'换乘站·客运站',m:'传统市场·窄巷',i:'大型商场·室内',u:'大学周边'},
  u:'人/㎡',hf:h=>h+'点',hs:h=>h+'点',date:(mo,d,wd,dn)=>`${mo}月${d}日（${wd}）${dn}`,man:(dn,h)=>`${dn} ${h}点`,fast:(wd,dn)=>`快进查看（${wd}）${dn}`,
  toast:(lvn,n,v,b)=>`${lvn}提醒：${n} ${v}人/㎡。${b===3?'请避免进入并绕行。':'请注意拥挤。'}`,
  zoom:(k,mt)=>`${k}倍 · 100px ≈ ${mt}`,zb:' · 街区（50米）',zh:' · 详细热力图',zm:' · 市郡区',zd:' · 洞级',
  nat:'全国',hint:['点击省市可放大到市郡区。','点击市郡区或地点可放大到洞级，拥挤的地点会显示名称。','点击洞或车站可查看详情，点击周边区域可移动。'],
  snd:'显示区域',snp:'显示地点',trend:'预计增加',norank:'该地区没有主要地点。',nolog:'暂无等级变化。',res:'生活区',next1:'1小时后预计',
  around:'车站周边约100米各方向密度',dir:['北','中心','南','西','东'],starOn:'★ 已关注',starOff:'☆ 加入关注',spark0:'每5秒记录一次',
- qerr:'未找到该车站或地区，请换个名称搜索。',mode:['实时','快进查看','选择时间'],rm:['起','终'],
+ qerr:'未找到该车站或地区，请换个名称搜索。',mode:['实时','快进查看','选择时间','历史记录'],rm:['起','终'],
  rhead:(a,b,k)=>`<b>${a} → ${b}</b>（直线约${k}公里）`,rsafe:(v,l)=>`路线周边最高密度${v}人/㎡（${l}）。现在可以安全通行。`,rrisk:(l,s)=>`路线周边${l}区域：${s}`,
  rdet:(v,l)=>`建议走实线所示的绕行路线，最高密度将降至${v}人/㎡（${l}）。`,rnodet:'周边均很拥挤，未找到绕行路线，建议推迟出发。',
  rdemo:'此为演示用直线路线，实际服务将通过地图API按道路计算。',rerr:'请从列表中选择出发地和目的地。',next:s=>`${s}秒后更新`,
@@ -381,14 +385,14 @@ zh:{today:{title:'今日安全提示',hd:(n,x)=>`今天预计有${n}处危险，
   route:'路线安全检查',from:'出发地（例：Itaewon Station）',to:'目的地（例：Seoul Station）',rgo:'查看路线',rclr:'清除',lg0:'安全 低于2',lg1:'注意 2~4',lg2:'警告 4~5',lg3:'危险 5以上',unit:'单位：人/㎡',
   cmnote:'地图颜色用于区分区域，圆点颜色表示密度等级。相邻区域会涂上不同颜色。',recent:'最近5分钟变化',today:'今日各时段预测密度',warn:'警告',danger:'危险',busiest:'当前最拥挤的地方',log:'等级变化提醒',
   note:'本页面为毕业作品演示。密度为按地点类型的时段规律加上实时波动的模拟数据，实际系统将以CCTV视频分析结果替代。边界依据2026年7月行政洞数据（公开数据 vuski/admdongkor），地点位置为大致坐标。'}},
-ja:{today:{title:'今日の安全案内',hd:(n,x)=>`今日は${n}か所で危険が予想されます。特に${x}周辺にご注意ください。`,hw:(n,x)=>`今日は${n}か所で混雑（警告）が予想されます。${x}周辺にご注意ください。`,hn:x=>`今日は大きな混雑は予想されません。最も混むのは${x}です。`,win:(a,b)=>a===b?`${a}時`:`${a}〜${b}時`,when:(w,v)=>`${w} 最大${v}人/㎡`,adv:['通常レベルです','やや混む可能性があります','この時間帯の訪問は避けましょう','この時間帯は避けて迂回してください'],upt:'これからの注意日（今後2週間）',upi:(d,c,x,v)=>`${d} ${c} · ${x} 最大${v}人/㎡予想`,upn:'今後2週間、特に危険な日はありません。',note:'日付・曜日・祝日・イベント日程と選択した天気・シナリオに基づく予測です。'},narrow:'狭い路地のため、同じ人数でも早く危険になります',alarmb:n=>`危険エリア${n}か所`,per:['現在のみ','過去1日','過去1週間','過去1か月','過去3か月','過去6か月','過去1年'],hist:{title:p=>`${p}：このルートの混雑記録`,stat:(dh,dd,wh)=>`危険 ${dh}時間（${dd}日）· 警告 ${wh}時間`,worst:(d,h,v,c)=>`最も混雑：${d} ${h}時、${v}人/㎡（${c}）`,best:(h,v)=>`普段いちばん空いている時間帯：${h}時（平均${v}人/㎡）`,hol:'祝日',nodata:'ルート周辺に主要スポットがないため、過去の混雑記録はほとんどありません。',hourly:'時間別最高密度',daily:'日別最高密度',chart:'過去の混雑記録グラフ',note:'過去の記録は曜日・祝日・季節・天気・イベント日程を反映したデモ用の仮想データです。'},newb:'2026新規',listA:'スポット一覧（市郡区別・ABC順）',busF:'予測時刻にいちばん混む場所',nowv:'現在',fcl:['現在','30分後','1時間後'],fcb:(ts,n)=>`${ts} 予測マップ`+(n?` · 危険予測 ${n}か所`:''),lv:['安全','注意','警告','危険'],dn:['平日','週末','イベント日'],wd:['日','月','火','水','木','金','土'],tn:{c:'駅周辺・ビジネス街',n:'繁華街',t:'観光・ショッピング',b:'ビーチ・公園',v:'公演会場・競技場',x:'乗換駅・ターミナル',m:'伝統市場・狭い路地',i:'大型モール・屋内',u:'大学周辺'},
+ja:{pq:['昨日','前回のハロウィン','前回の花火大会','前回の大晦日'],pastLabel:(p,c)=>`${p.y}.${p.m}.${p.d}（${WD[p.dow]}）${c}の記録`,pastNote:'過去の記録には、その日の曜日・祝日・季節・イベント・天気が適用されます。シナリオと天気の選択は使いません。（デモ用仮想データ）',today:{title:'今日の安全案内',hd:(n,x)=>`今日は${n}か所で危険が予想されます。特に${x}周辺にご注意ください。`,hw:(n,x)=>`今日は${n}か所で混雑（警告）が予想されます。${x}周辺にご注意ください。`,hn:x=>`今日は大きな混雑は予想されません。最も混むのは${x}です。`,win:(a,b)=>a===b?`${a}時`:`${a}〜${b}時`,when:(w,v)=>`${w} 最大${v}人/㎡`,adv:['通常レベルです','やや混む可能性があります','この時間帯の訪問は避けましょう','この時間帯は避けて迂回してください'],upt:'これからの注意日（今後2週間）',upi:(d,c,x,v)=>`${d} ${c} · ${x} 最大${v}人/㎡予想`,upn:'今後2週間、特に危険な日はありません。',note:'日付・曜日・祝日・イベント日程と選択した天気・シナリオに基づく予測です。'},narrow:'狭い路地のため、同じ人数でも早く危険になります',alarmb:n=>`危険エリア${n}か所`,per:['現在のみ','過去1日','過去1週間','過去1か月','過去3か月','過去6か月','過去1年'],hist:{title:p=>`${p}：このルートの混雑記録`,stat:(dh,dd,wh)=>`危険 ${dh}時間（${dd}日）· 警告 ${wh}時間`,worst:(d,h,v,c)=>`最も混雑：${d} ${h}時、${v}人/㎡（${c}）`,best:(h,v)=>`普段いちばん空いている時間帯：${h}時（平均${v}人/㎡）`,hol:'祝日',nodata:'ルート周辺に主要スポットがないため、過去の混雑記録はほとんどありません。',hourly:'時間別最高密度',daily:'日別最高密度',chart:'過去の混雑記録グラフ',note:'過去の記録は曜日・祝日・季節・天気・イベント日程を反映したデモ用の仮想データです。'},newb:'2026新規',listA:'スポット一覧（市郡区別・ABC順）',busF:'予測時刻にいちばん混む場所',nowv:'現在',fcl:['現在','30分後','1時間後'],fcb:(ts,n)=>`${ts} 予測マップ`+(n?` · 危険予測 ${n}か所`:''),lv:['安全','注意','警告','危険'],dn:['平日','週末','イベント日'],wd:['日','月','火','水','木','金','土'],tn:{c:'駅周辺・ビジネス街',n:'繁華街',t:'観光・ショッピング',b:'ビーチ・公園',v:'公演会場・競技場',x:'乗換駅・ターミナル',m:'伝統市場・狭い路地',i:'大型モール・屋内',u:'大学周辺'},
  u:'人/㎡',hf:h=>h+'時',hs:h=>h+'時',date:(mo,d,wd,dn)=>`${mo}月${d}日（${wd}）${dn}`,man:(dn,h)=>`${dn} ${h}時時点`,fast:(wd,dn)=>`早送り（${wd}）${dn}`,
  toast:(lvn,n,v,b)=>`${lvn}通知：${n} ${v}人/㎡。${b===3?'立ち入りを控え、迂回してください。':'混雑に注意してください。'}`,
  zoom:(k,mt)=>`${k}倍 · 100px ≈ ${mt}`,zb:' · ブロック（50m）',zh:' · 詳細ヒートマップ',zm:' · 市郡区',zd:' · 洞単位',
  nat:'全国',hint:['道・市をタップすると市郡区に拡大します。','市郡区やスポットをタップすると洞単位に拡大します。混雑している場所は名前も表示されます。','洞や駅をタップすると詳細を表示します。周辺の地域をタップすると移動します。'],
  snd:'表示中の地域',snp:'表示中のスポット',trend:'増加見込み',norank:'この地域には主要スポットがありません。',nolog:'まだレベルの変化はありません。',res:'生活圏',next1:'1時間後の予測',
  around:'駅周辺約100mの方角別密度',dir:['北','中心','南','西','東'],starOn:'★ お気に入り',starOff:'☆ お気に入りに追加',spark0:'5秒ごとに記録されます',
- qerr:'該当する駅や地域がありません。別の名前で検索してください。',mode:['リアルタイム','早送り','時間を選ぶ'],rm:['発','着'],
+ qerr:'該当する駅や地域がありません。別の名前で検索してください。',mode:['リアルタイム','早送り','時間を選ぶ','過去の記録'],rm:['発','着'],
  rhead:(a,b,k)=>`<b>${a} → ${b}</b>（直線で約${k}km）`,rsafe:(v,l)=>`ルート周辺の最大密度は${v}人/㎡（${l}）。今は安全に移動できます。`,rrisk:(l,s)=>`ルート周辺の${l}エリア：${s}`,
  rdet:(v,l)=>`実線の迂回ルートをおすすめします。最大密度が${v}人/㎡（${l}）まで下がります。`,rnodet:'周辺がすべて混雑しており、迂回ルートが見つかりません。出発を遅らせることをおすすめします。',
  rdemo:'デモ用の直線ルートです。実際のサービスでは地図APIの道路ルートで計算します。',rerr:'出発地と目的地をリストから選んでください。',next:s=>`次の更新まで${s}秒`,
@@ -436,7 +440,8 @@ concert:{h:[16,23],m:{'서울월드컵경기장':2.0,'잠실종합운동장':2.0
 const WX=[{c:1,n:1,t:1,b:1,v:1,x:1,m:1,i:1,u:1},{c:1.12,n:0.85,t:0.7,b:0.4,v:0.85,x:1.15,m:0.75,i:1.25,u:0.85},{c:1.15,n:0.8,t:0.6,b:0.3,v:0.8,x:1.15,m:0.7,i:1.2,u:0.8},{c:1,n:1,t:0.75,b:0.7,v:0.95,x:1,m:0.85,i:1.3,u:0.95}];
 const hx=t=>((t%24)+24)%24;
 const winF=(t,w)=>{const x=hx(t);const inside=w[0]<=w[1]?(x>=w[0]&&x<=w[1]):(x>=w[0]||x<=w[1]);if(inside)return 1;const dd=c=>{const v=Math.abs(x-c);return Math.min(v,24-v)};const m=Math.min(dd(w[0]),dd(w[1]));return Math.exp(-(m*m)/2)};
-const hsModel=(h,day,t)=>hsModelP(h,day,t,S.scen,S.wx);
+const hsModel=(h,day,t)=>(S.mode==='past'&&PAST)?hsModelP(h,day,t,PAST.scen,PAST.wx)*SEA[h.type][PAST.m-1]*PAST.noise:hsModelP(h,day,t,S.scen,S.wx);
+let PAST=null;
 const hsModelP=(h,day,t,scn,wxi)=>{const sc=SC[scn];let m=WX[wxi][h.type],d=day,shape=PR[h.type](t);if(sc&&sc.m[h.name]){const f=winF(t,sc.h);d=2;m*=1+(sc.m[h.name]-1)*f;shape=Math.max(shape,f*0.95)}return Math.max(0,0.2+h.cap*DM[h.type][d]*shape*m*(h.type==='m'?1.15:1))};
 const dongModel=(D,day,t,live)=>{let v=0.12+D.cap*DM.r[day]*PR.r(t);D.near.forEach(([i,w])=>v+=w*(live?H[i].d:hsModel(H[i],day,t)));if(D.hs!==undefined)v=Math.max(v,(live?H[D.hs].d:hsModel(H[D.hs],day,t))*0.85);return Math.max(0,v)};
 let LV=I18N.ko.lv;
@@ -471,6 +476,7 @@ const S={rper:0,hcache:null,sortA:true,fc:0,theme:THEMES[PREF.theme]?PREF.theme:
 function kstNow(){const o={};new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Seoul',hour12:false,month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit',weekday:'short'}).formatToParts(new Date()).forEach(x=>o[x.type]=x.value);
  return {mo:+o.month,d:+o.day,h:+o.hour%24,mi:+o.minute,s:+o.second,dow:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].indexOf(o.weekday)}}
 function ctx(){
+ if(S.mode==='past'&&PAST)return {day:PAST.day,h:PAST.hr,clock:`${pad(PAST.hr)}:00`,dateLabel:T.pastLabel(PAST,causeOf(PAST))};
  if(S.mode==='man')return {day:S.manDay,h:S.manHr,dateLabel:T.man(DN[S.manDay],S.manHr)};
  const k=kstNow();
  if(S.mode==='live'){const day=S.fest?2:(k.dow===0||k.dow===6?1:0);return {day,h:k.h+k.mi/60+k.s/3600,clock:`${pad(k.h)}:${pad(k.mi)}:${pad(k.s)}`,dateLabel:T.date(k.mo,k.d,WD[k.dow],DN[day])}}
@@ -482,11 +488,11 @@ const DL=Object.values(DONG);
 const agg={mun:{},prov:{}};
 function step(){
  const c=ctx();
- H.forEach(h=>{h.noise=0.85*h.noise+randn()*0.08;const b=hsModel(h,c.day,c.h);h.d=Math.max(0,b+h.noise*(0.4+b*0.25));h.next=hsModel(h,c.day,(c.h+1)%24);
+ H.forEach(h=>{h.noise=(S.mode==='past'&&PAST)?(h32(PAST.seed+h.id*31)-0.5)*0.25:0.85*h.noise+randn()*0.08;const b=hsModel(h,c.day,c.h);h.d=Math.max(0,b+h.noise*(0.4+b*0.25));h.next=hsModel(h,c.day,(c.h+1)%24);
   h.ar=h.ar.map(a=>0.8*a+randn()*0.04);h.hist.push(h.d);if(h.hist.length>60)h.hist.shift();
   const l=lv(h.d);if(h.lvl!==null&&l!==h.lvl)logChange(h,h.lvl,l,c);h.lvl=l});
  agg.mun={};agg.prov={};
- DL.forEach(D=>{D.noise=0.8*D.noise+randn()*0.03;D.d=Math.max(0,dongModel(D,c.day,c.h,true)+D.noise);if(D.hist){D.hist.push(D.d);if(D.hist.length>60)D.hist.shift()}
+ DL.forEach(D=>{D.noise=S.mode==='past'?0:0.8*D.noise+randn()*0.03;D.d=Math.max(0,dongModel(D,c.day,c.h,true)+D.noise);if(D.hist){D.hist.push(D.d);if(D.hist.length>60)D.hist.shift()}
   agg.mun[D.mun]=Math.max(agg.mun[D.mun]||0,D.d);agg.prov[D.prov]=Math.max(agg.prov[D.prov]||0,D.d)});
  computeFc(c);render();
 }
@@ -505,7 +511,7 @@ function fcBadge(){const hb=document.querySelector('[data-i=busiest]');if(hb)hb.
  const c=ctx();const m=Math.round(((c.h+S.fc)%24)*60);const ts=`${pad(Math.floor(m/60)%24)}:${pad(m%60)}`;
  const nd=visH().filter(h=>lv(h.fd)===3).length;b.textContent=T.fcb(ts,nd);b.style.display='block';wrap.classList.add('fcm')}
 const logs=[];
-function logChange(p,a,b,c){
+function logChange(p,a,b,c){if(S.mode==='past')return;
  const L=S.alertLv;if(b<L&&a<L)return;if(S.favOnly&&!S.favs.has(p.name))return;const k=kstNow();
  const t=S.mode==='live'?`${pad(k.h)}:${pad(k.mi)}:${pad(k.s)}`:S.mode==='fast'?c.clock.slice(0,5):T.hf(S.manHr);
  logs.unshift({t,p,a,b,l:b});if(logs.length>40)logs.pop();
@@ -704,12 +710,29 @@ function search(v){
 $('q').addEventListener('change',e=>search(e.target.value));
 $('q').addEventListener('keydown',e=>{if(e.key==='Enter')search(e.target.value)});
 $('q').addEventListener('input',()=>$('qerr').textContent='');
-function setMode(m){S.mode=m;['live','fast','man'].forEach(k=>$('m-'+k).setAttribute('aria-pressed',k===m));
- $('manual').classList.toggle('on',m==='man');$('fest-l').style.display=m==='man'?'none':'inline-flex';
- $('live').classList.toggle('off',m!=='live');$('live-txt').textContent=T.mode[m==='live'?0:m==='fast'?1:2];
+function setMode(m){S.mode=m;['live','fast','man','past'].forEach(k=>$('m-'+k).setAttribute('aria-pressed',k===m));
+ $('manual').classList.toggle('on',m==='man');$('pastp').classList.toggle('on',m==='past');$('fest-l').style.display=(m==='man'||m==='past')?'none':'inline-flex';
+ $('scen').disabled=m==='past';$('next').style.visibility=m==='past'?'hidden':'';document.querySelectorAll('#wx button').forEach(b=>b.disabled=m==='past');document.querySelector('.bar:nth-of-type(2)')&&0;
+ if(m==='past'&&!PAST)setPastDate(todayMs()-864e5,21,true);
+ $('live').classList.toggle('off',m!=='live');$('live-txt').textContent=T.mode[MI(m)];
  if(m==='fast'){const k=kstNow();S.simMin=k.h*60+k.mi;S.simDow=k.dow}
  H.forEach(p=>{p.hist=[];p.lvl=null});DL.forEach(D=>{if(D.hist)D.hist=[]});S.tick=5;step();clock()}
-$('m-live').onclick=()=>setMode('live');$('m-fast').onclick=()=>setMode('fast');$('m-man').onclick=()=>setMode('man');
+$('m-live').onclick=()=>setMode('live');$('m-fast').onclick=()=>setMode('fast');$('m-man').onclick=()=>setMode('man');$('m-past').onclick=()=>setMode('past');
+const MI=m=>m==='live'?0:m==='fast'?1:m==='man'?2:3;
+const todayMs=()=>Math.floor((Date.now()+9*3600e3)/864e5)*864e5;
+const isoOf=ms=>{const d=new Date(ms);return `${d.getUTCFullYear()}-${pad(d.getUTCMonth()+1)}-${pad(d.getUTCDate())}`};
+function pastInfo(){if(!PAST)return;$('phr-out').textContent=T.hf(PAST.hr);$('pinfo').textContent=T.pastNote}
+function setPastDate(ms,hr,silent){const t0=todayMs();ms=Math.max(t0-365*864e5,Math.min(t0-864e5,ms));const di=dayInfo(ms);PAST={...di,ms,hr,seed:di.y*400+di.m*31+di.d};
+ $('pd').value=isoOf(ms);$('pd').min=isoOf(t0-365*864e5);$('pd').max=isoOf(t0-864e5);$('phr').value=hr;pastInfo();
+ if(!silent){H.forEach(p=>{p.hist=[];p.lvl=null});step();clock()}}
+$('pd').addEventListener('change',e=>{const [y,m,d]=e.target.value.split('-').map(Number);if(y)setPastDate(Date.UTC(y,m-1,d),PAST?PAST.hr:21)});
+$('phr').addEventListener('input',e=>{if(PAST)setPastDate(PAST.ms,+e.target.value)});
+function lastDate(pred,fromMs){for(let k=1;k<=365;k++){const ms=fromMs-k*864e5;if(pred(dayInfo(ms)))return ms}return fromMs-864e5}
+document.querySelectorAll('#pastp .chip').forEach(b=>b.onclick=()=>{const t0=todayMs(),q=b.dataset.q;
+ if(q==='y')setPastDate(t0-864e5,21);
+ else if(q==='h')setPastDate(lastDate(d=>d.scen==='halloween'&&d.dow===6,t0),21);
+ else if(q==='f')setPastDate(lastDate(d=>d.scen==='fireworks',t0),20);
+ else setPastDate(lastDate(d=>d.scen==='countdown',t0),23)});
 $('fest').onchange=e=>{S.fest=e.target.checked;step()};
 document.querySelectorAll('#manual .seg button').forEach(b=>b.onclick=()=>{S.manDay=+b.dataset.d;document.querySelectorAll('#manual .seg button').forEach(x=>x.setAttribute('aria-pressed',x===b));step()});
 $('hr').oninput=e=>{S.manHr=+e.target.value;$('hr-out').textContent=T.hf(S.manHr);step();clock()};
@@ -835,7 +858,7 @@ function applyLang(){T=I18N[LANG];LV=T.lv;DN=T.dn;WD=T.wd;TN=T.tn;document.docum
  document.querySelectorAll('[data-i]').forEach(el=>{const v=T.s[el.dataset.i];if(v!==undefined)el.textContent=v});
  document.querySelectorAll('[data-ip]').forEach(el=>{const v=T.s[el.dataset.ip];if(v!==undefined)el.placeholder=v});
  document.querySelectorAll('#lang button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.l===LANG));
- document.title=T.s.title;$('m-live').textContent=T.mode[0];$('m-fast').textContent=T.mode[1];$('m-man').textContent=T.mode[2];fillOpts();fillQL();$('hr-out').textContent=T.hf(S.manHr);$('live-txt').textContent=T.mode[S.mode==='live'?0:S.mode==='fast'?1:2];$('next').textContent=T.next(S.tick)}
+ document.title=T.s.title;$('m-live').textContent=T.mode[0];$('m-fast').textContent=T.mode[1];$('m-man').textContent=T.mode[2];$('m-past').textContent=T.mode[3];document.querySelectorAll('#pastp .chip').forEach((b,i)=>b.textContent=T.pq[i]);if(S.mode==='past')pastInfo();fillOpts();fillQL();$('hr-out').textContent=T.hf(S.manHr);$('live-txt').textContent=T.mode[MI(S.mode)];$('next').textContent=T.next(S.tick)}
 function setLang(l){LANG=l;try{localStorage.setItem('crowd-lang',l)}catch(e){}applyLang();if(typeof DEMO!=='undefined'&&DEMO.on)$('ex-demo').querySelector('span').textContent=T.s.exstop2;applyTheme();drawMap();render();applyK();clock()}
 document.querySelectorAll('#lang button').forEach(b=>b.onclick=()=>setLang(b.dataset.l));
 document.querySelectorAll('#sortm button').forEach(b=>b.onclick=()=>{S.sortA=b.dataset.s==='a';document.querySelectorAll('#sortm button').forEach(x=>x.setAttribute('aria-pressed',x===b));render();$('rank').scrollTop=0});
@@ -878,7 +901,7 @@ $('ex-full').onclick=async()=>{try{if(document.fullscreenElement)await document.
 $('ex-reset').onclick=()=>{demoStop();$('r-clr').click();dFc(0);dScen('none');$('m-live').click();go('prov','11');window.scrollTo({top:0,behavior:'smooth'})};
 function makeQR(v){const b=$('qr-box');b.innerHTML='';if(!v||!window.QRCode)return;try{new QRCode(b,{text:v,width:200,height:200,correctLevel:QRCode.CorrectLevel.M})}catch(e){}}
 $('qr-in').addEventListener('input',e=>{const v=e.target.value.trim();try{localStorage.setItem('crowd-qr',v)}catch(_){}makeQR(v)});
-(()=>{let v='';try{v=localStorage.getItem('crowd-qr')||''}catch(_){}if(!v)v='https://claude.ai/artifact/Gd4D1cN7fpw31uHBS73B1z?sk=i62AvtMLeRSf2kHR0Gf-tQ';$('qr-in').value=v;if(v)setTimeout(()=>makeQR(v),500)})();
+(()=>{let v='';try{v=localStorage.getItem('crowd-qr')||''}catch(_){}if(!v||v.includes('claude.ai'))v='https://totoro1313.github.io/crowd-dynamics-analysis-for-large-crowd-events/';$('qr-in').value=v;if(v)setTimeout(()=>makeQR(v),500)})();
 
 applyLang();
 $('theme').onchange=e=>{S.theme=e.target.value;savePref();applyTheme();drawMap();render();applyK()};
