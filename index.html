@@ -663,8 +663,8 @@ function renderCore(){
  d3.select('#garea').selectAll('path').filter(a=>S.sel.k==='dong'&&a.key===S.sel.id).raise();
  const dz=A.main.filter(a=>lv(val(a))>=2).sort((a,b)=>val(a)-val(b));
  const gdz=d3.select('#gdanger').selectAll('g.dz').data(dz,a=>a.key).join(en=>{const g=en.append('g').attr('class','dz');g.append('path').attr('class','dz-o');g.append('path').attr('class','dz-i');return g}).order();
- gdz.select('.dz-o').attr('d',a=>path(a.f)).attr('vector-effect','non-scaling-stroke').attr('stroke',a=>css('--s'+lv(val(a)))).attr('class',a=>'dz-o'+(lv(val(a))===3?' dz-pulse':''));
- gdz.select('.dz-i').attr('d',a=>path(a.f)).attr('vector-effect','non-scaling-stroke').attr('stroke',a=>css('--s'+lv(val(a)))).attr('stroke-width',a=>lv(val(a))===3?3:2).attr('stroke-dasharray',a=>lv(val(a))===3?null:'5 4').attr('class',a=>'dz-i'+(lv(val(a))===3?' dz-blink':''));
+ gdz.select('.dz-o').attr('d',a=>path(a.f)).attr('vector-effect','non-scaling-stroke').attr('stroke',a=>css('--s'+lv(val(a)))).attr('class',a=>'dz-o'+(lv(val(a))>=2?' dz-pulse':''));
+ gdz.select('.dz-i').attr('d',a=>path(a.f)).attr('vector-effect','non-scaling-stroke').attr('stroke',a=>css('--s'+lv(val(a)))).attr('stroke-width',3).attr('stroke-dasharray',null).attr('class',a=>'dz-i'+(lv(val(a))>=2?' dz-blink':''));
  const anyD=dz.some(a=>lv(val(a))===3)||visH().some(h=>lv(h.d)===3),anyW=!anyD&&(dz.length>0||visH().some(h=>lv(h.d)===2));
  const mw=document.querySelector('.mapwrap');mw.classList.remove('alarm','warnb');mw.classList.toggle('hasd',anyD);const nDz=visH().filter(h=>lv(h.d)===3).length||dz.filter(a=>lv(val(a))===3).length;$('alarmb').textContent='⚠ '+T.alarmb(nDz);
  const V=visH();
