@@ -82,9 +82,6 @@ input[type=range]{flex:1;accent-color:var(--accent)}
 #detail.lv2{border:2px solid var(--s2)}
 @media (prefers-reduced-motion:reduce){.dz-pulse,.dz-blink,.mapwrap.alarm,.mapwrap.alarm::after,.alarmb{animation:none}}
 .nw{display:inline-block;font-size:10px;font-weight:600;color:var(--accent);border:1px solid var(--accent);border-radius:4px;padding:0 4px;margin-left:6px;vertical-align:middle;line-height:1.5}
-.rh{margin-top:10px;padding-top:10px;border-top:1px solid var(--line)}
-.rh-t{font-weight:600;margin-bottom:2px}
-.rh svg rect:hover{opacity:.75}
 #today .td-h{font-size:14px;margin:4px 0 8px;padding:8px 10px;border-radius:8px;background:var(--bg)}
 #today .td-h.td-d{background:color-mix(in srgb,var(--s3) 12%,transparent);color:var(--s3);font-weight:600}
 #today .td-h.td-ok{background:color-mix(in srgb,var(--s0) 10%,transparent);color:var(--ink)}
@@ -211,8 +208,6 @@ h2{font-size:16px;font-weight:600;margin:0 0 10px}
 .grp{display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap}
 .grp .l,.bar .l{font-size:13px;color:var(--ink2)}
 select.sel{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:6px 10px;font-size:14px}
-.route{font-size:13px;margin:4px 8px 8px;padding:10px 12px;border-radius:8px;background:var(--bg);display:none;line-height:1.7}
-.route.on{display:block}
 .star{border:1px solid var(--line);background:transparent;border-radius:8px;padding:4px 10px;font-size:13px;margin-top:8px}
 .star[aria-pressed="true"]{color:var(--s1);border-color:var(--s1)}
 </style>
@@ -231,7 +226,7 @@ select.sel{background:var(--panel);border:1px solid var(--line);border-radius:8p
 <h3 class="ab-s">비전 AI 사전 실험 (YOLO11)</h3>
 <p class="ab-p">사람이 적은 영상에서는 4명 중 4명을 0.2초 만에 찾아냈지만, 빽빽한 군중 사진에서는 사람들이 서로 가려져 대부분을 찾지 못했습니다. 그래서 <b>저밀도는 YOLO, 고밀도는 군중 계수 모델</b>을 함께 쓰는 혼합 방식을 설계했습니다.</p>
 <h3 class="ab-s">이 화면에서 해볼 수 있는 것</h3>
-<p class="ab-p">검색창에 우리 학교나 동네 역을 입력해 보세요. 상황을 "핼러윈 주말", 시간을 21시로 바꾸면 위험 구역이 반짝이고, 경로 안전 확인에서 위험을 피하는 우회 경로를 볼 수 있습니다. 화면 위쪽의 "자동 시연" 버튼을 누르면 전체 기능을 차례로 보여줍니다.</p>
+<p class="ab-p">검색창에 우리 학교나 동네 역을 입력해 보세요. 상황을 "핼러윈 주말", 시간을 21시로 바꾸면 위험 구역이 반짝이고, "오늘의 안전 안내"에서 장소를 누르면 그 날짜와 시간의 지도로 이동합니다. 화면 위쪽의 "자동 시연" 버튼을 누르면 전체 기능을 차례로 보여줍니다.</p>
 <p class="ab-n">※ 화면의 밀집도는 시연용 가상 데이터이며, 실제 시스템에서는 CCTV 영상 분석 결과로 대체됩니다.</p></div><div class="ab-lang" data-l="en">
 <h2 class="ab-h">Real-time Crowd Density Measurement and Risk Detection to Prevent Crowd Crushes</h2>
 <p class="ab-p">In the Itaewon crowd crush on October 29, 2022, 159 people lost their lives in a narrow alley. Map and navigation apps gave no warning that the area was dangerous, so people kept walking in. This project builds <b>a map that lets pedestrians see danger and avoid it themselves</b>.</p>
@@ -242,7 +237,7 @@ select.sel{background:var(--panel);border:1px solid var(--line);border-radius:8p
 <h3 class="ab-s">Vision AI pilot (YOLO11)</h3>
 <p class="ab-p">In a sparse scene YOLO found 4 of 4 people in 0.2 s, but in a packed crowd most people were hidden behind each other. So the design combines <b>YOLO for sparse scenes and a crowd-counting model for dense ones</b>.</p>
 <h3 class="ab-s">Try it</h3>
-<p class="ab-p">Search for a station near you. Set the scenario to "Halloween weekend" and the time to 21:00 to see danger zones blink, then use the route safety check for a detour. Press "Auto demo" at the top to see every feature in order.</p>
+<p class="ab-p">Search for a station near you. Set the scenario to "Halloween weekend" and the time to 21:00 to see danger zones blink, then tap a place in the safety guide to jump to that date and time on the map. Press "Auto demo" at the top to see every feature in order.</p>
 <p class="ab-n">※ Densities on this screen are simulated for the demo; the real system uses CCTV video analysis.</p></div>
 <div class="ab-qr"><h3 class="ab-s" data-i="exqr">관람객 휴대폰으로 보기</h3><p class="ab-p" data-i="exqrd">이 페이지의 공유 링크를 붙여넣으면 QR 코드가 만들어집니다.</p><input class="search" id="qr-in" placeholder="https://claude.ai/..." style="width:100%"><div id="qr-box"></div></div></dialog>
 <div class="wrap">
@@ -288,18 +283,13 @@ select.sel{background:var(--panel);border:1px solid var(--line);border-radius:8p
   <label><input type="checkbox" id="autop" checked> <span data-i="autop">밀집 시 자동 알림</span></label><button class="chip" id="devn" data-i="devn">🔔 기기 알림 켜기</button>
   <label><input type="checkbox" id="favonly"> <span data-i="favonly">관심 장소만 알림</span></label>
 </div>
-<div class="bar">
-  <span class="l" data-i="route">경로 안전 확인</span>
-  <input class="search" id="r-from" list="ql" data-ip="from" placeholder="출발 (예: 이태원역)" aria-label="출발지">
-  <input class="search" id="r-to" list="ql" data-ip="to" placeholder="도착 (예: 서울역)" aria-label="도착지">
-  <select class="sel" id="r-per" aria-label="period"></select><button id="r-go" class="chip" data-i="rgo">경로 확인</button><button id="r-clr" class="chip" data-i="rclr">지우기</button><span class="err" id="r-err"></span>
-</div>
+
 
 <div class="grid">
   <div class="card mapcard">
     <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap"><nav class="crumb" id="crumb" aria-label="지역 단계"></nav><div class="seg" id="fc" role="group" aria-label="time offset"><button data-f="-1" aria-pressed="false" data-i="fcm1">1시간 전</button><button data-f="-0.5" aria-pressed="false" data-i="fcm05">30분 전</button><button data-f="0" aria-pressed="true" data-i="fc0">지금</button><button data-f="0.5" aria-pressed="false" data-i="fc1">30분 뒤</button><button data-f="1" aria-pressed="false" data-i="fc2">1시간 뒤</button><button data-f="2" aria-pressed="false" data-i="fc3">2시간 뒤</button><button data-f="3" aria-pressed="false" data-i="fc4">3시간 뒤</button></div><input type="date" id="mapd" class="search mapd" aria-label="date"><span id="pnick" style="display:none;font-size:12px;color:var(--accent);background:var(--accent-bg);padding:2px 10px;border-radius:999px;margin-right:8px"></span></div>
     <div class="hint" id="hint"></div>
-    <div class="mapwrap"><div class="alarmb" id="alarmb" role="status"></div><div class="fcb" id="fcb" style="display:none"></div><div class="zc"><button id="z-in" aria-label="확대">+</button><button id="z-out" aria-label="축소">−</button><button id="z-rst" aria-label="원래 크기" style="font-size:13px">⟲</button></div><div class="zlv" id="zlv">1배</div><canvas id="heat" aria-hidden="true"></canvas><svg id="map" viewBox="0 0 600 640" role="img" aria-label="인파 밀집도 지도"><g id="zoomg"><g id="gctx"></g><g id="garea"></g><g id="gdanger"></g><g id="glab"></g><g id="groute"></g><g id="gm"></g></g></svg></div>
+    <div class="mapwrap"><div class="alarmb" id="alarmb" role="status"></div><div class="fcb" id="fcb" style="display:none"></div><div class="zc"><button id="z-in" aria-label="확대">+</button><button id="z-out" aria-label="축소">−</button><button id="z-rst" aria-label="원래 크기" style="font-size:13px">⟲</button></div><div class="zlv" id="zlv">1배</div><canvas id="heat" aria-hidden="true"></canvas><svg id="map" viewBox="0 0 600 640" role="img" aria-label="인파 밀집도 지도"><g id="zoomg"><g id="gctx"></g><g id="garea"></g><g id="gdanger"></g><g id="glab"></g><g id="gm"></g></g></svg></div>
     <div class="legend">
       <span><i class="sw" style="background:var(--s0)"></i><span data-i="lg0">안전 2 미만</span></span>
       <span><i class="sw" style="background:var(--s1)"></i><span data-i="lg1">주의 2~4</span></span>
@@ -310,7 +300,6 @@ select.sel{background:var(--panel);border:1px solid var(--line);border-radius:8p
       <span data-i="unit">단위 명/㎡</span>
     </div>
     <div class="hint" id="cm-note" style="display:none;padding:0 8px 8px" data-i="cmnote">지도 색은 지역을 구분하고, 점 색은 밀집도 등급을 나타냅니다. 이웃한 지역끼리는 서로 다른 색이 칠해집니다.</div>
-    <div class="route" id="r-res" aria-live="polite"></div>
   </div>
   <div class="side">
     <div class="card" id="today" aria-live="polite"></div>
@@ -502,7 +491,7 @@ function applyTheme(){let TH=THEMES[S.theme]||THEMES.sea;if(TH.auto)TH=S.prov&&P
  ramp=d3.interpolateRgbBasis([...P.s,d3.color(P.s[3]).darker(1.1)+'']);st.colorScheme=dark?'dark':'light'}
 function loadFavs(){try{return new Set(JSON.parse(localStorage.getItem('crowd-favs')||'[]'))}catch(e){return new Set()}}
 function saveFavs(){try{localStorage.setItem('crowd-favs',JSON.stringify([...S.favs]))}catch(e){}}
-const S={rper:0,hcache:null,sortA:true,fc:0,theme:THEMES[PREF.theme]?PREF.theme:'auto',dpal:DPAL[PREF.dpal]?PREF.dpal:'br',cmode:'density',scen:'auto',wx:0,types:{c:true,n:true,t:true,b:true,v:true,x:true,m:true,i:true,u:true},onlyW:false,alertLv:2,autoPush:true,devN:false,favOnly:false,favs:loadFavs(),route:null,mode:'live',lv:'prov',prov:'11',mun:null,sel:{k:'hs',id:6},fest:false,manDay:0,manHr:21,simMin:0,simDow:0,tick:5};
+const S={sortA:true,fc:0,theme:THEMES[PREF.theme]?PREF.theme:'auto',dpal:DPAL[PREF.dpal]?PREF.dpal:'br',cmode:'density',scen:'auto',wx:0,types:{c:true,n:true,t:true,b:true,v:true,x:true,m:true,i:true,u:true},onlyW:false,alertLv:2,autoPush:true,devN:false,favOnly:false,favs:loadFavs(),route:null,mode:'live',lv:'prov',prov:'11',mun:null,sel:{k:'hs',id:6},fest:false,manDay:0,manHr:21,simMin:0,simDow:0,tick:5};
 function kstNow(){const o={};new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Seoul',hour12:false,month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit',weekday:'short'}).formatToParts(new Date()).forEach(x=>o[x.type]=x.value);
  return {mo:+o.month,d:+o.day,h:+o.hour%24,mi:+o.minute,s:+o.second,dow:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].indexOf(o.weekday)}}
 function ctx(){
@@ -615,7 +604,6 @@ function applyK(){return withFc(applyKCore)}
 function applyKCore(){const k=S.k||1;
  d3.selectAll('#gm g.pt').attr('transform',p=>{const[x,y]=proj([p.lon,p.lat]);return `translate(${x},${y}) scale(${1/k})`});
  const n=d3.selectAll('#gm g.pt').size();d3.selectAll('#gm g.pt').select('text').text(p=>showLab(p,n)?nH(p):'');
- d3.selectAll('#groute g.rm').attr('transform',function(){return this.getAttribute('data-t')+` scale(${1/k})`});
  drawLabels();drawHeat();
  const cw=HC.parentElement.clientWidth||600,m=100/((cw/600)*k*kmUnits())*1000;const mt=m>=1000?(Math.round(m/100)/10)+'km':Math.round(m/10)*10+'m';
  $('zlv').textContent=T.zoom(Math.round(k*10)/10,mt)+(blockOn()?T.zb:heatOn()?T.zh:(k>=FINE&&S.lv!=='mun'?(S.lv==='nat'?T.zm:T.zd):''));
@@ -712,7 +700,7 @@ function renderDetail(c){
   $('d-around').innerHTML=`<div class="chartlab">${T.around}</div><div class="around"><div class="nil"></div>${cell(around[0],T.dir[0])}<div class="nil"></div>${cell(around[3],T.dir[3])}${cell(around[1],T.dir[1])}${cell(around[4],T.dir[4])}<div class="nil"></div>${cell(around[2],T.dir[2])}<div class="nil"></div></div>`}
  else $('d-around').innerHTML='';
  const st=$('d-star');if(S.sel.k==='hs'){st.style.display='';const on=S.favs.has(H[S.sel.id].name);st.setAttribute('aria-pressed',on);st.textContent=on?T.starOn:T.starOff}else st.style.display='none';
- drawSpark(hist,d);drawDay(prof,c);renderRoute();drawHeat();
+ drawSpark(hist,d);drawDay(prof,c);drawHeat();
 }
 function drawSpark(h,d){
  const s=d3.select('#spark');s.selectAll('*').remove();
@@ -775,7 +763,6 @@ $('hr').oninput=e=>{S.manHr=+e.target.value;$('hr-out').textContent=T.hf(S.manHr
 function clock(){const c=ctx();$('clock').textContent=c.clock||`${pad(S.manHr)}:00`;$('date').textContent=c.dateLabel}
 matchMedia('(prefers-color-scheme: dark)').addEventListener('change',()=>{applyTheme();drawMap();render()});
 
-const PERS=[0,1,7,30,90,180,365];
 const HOL=new Set(['2025-01-01','2025-01-28','2025-01-29','2025-01-30','2025-03-01','2025-03-03','2025-05-05','2025-05-06','2025-06-03','2025-06-06','2025-08-15','2025-10-03','2025-10-04','2025-10-05','2025-10-06','2025-10-07','2025-10-08','2025-10-09','2025-12-25','2026-01-01','2026-02-16','2026-02-17','2026-02-18','2026-03-01','2026-03-02','2026-05-05','2026-05-24','2026-05-25','2026-06-03','2026-06-06','2026-08-15','2026-08-17','2026-09-24','2026-09-25','2026-09-26','2026-10-03','2026-10-05','2026-10-09','2026-12-25','2027-01-01']);
 const h32=a=>{let x=a|0;x=Math.imul(x^(x>>>16),0x45d9f3b);x=Math.imul(x^(x>>>16),0x45d9f3b);return ((x^(x>>>16))>>>0)/4294967296};
 const SEA={b:[0.5,0.5,0.6,0.8,1,1.2,1.4,1.4,1.1,0.9,0.7,0.55],t:[0.8,0.8,0.95,1.15,1.15,1,1,1,1.1,1.2,1.1,0.9],n:[0.95,0.9,0.95,1,1,1,1.05,1.05,1,1.05,1,1.15],c:[1,1,1,1,1,1,1,1,1,1,1,1],v:[0.8,0.8,0.95,1,1.05,1.05,1.05,1.05,1.05,1.1,1,0.9],x:[1.05,1.1,1,1,1,1,1.05,1.1,1.1,1.05,1,1.1],m:[1.1,1.1,1,1,1,0.95,0.9,0.9,1.15,1,1,1.1],i:[1.1,1.05,1,1,1,1.05,1.15,1.15,1,1,1.05,1.15],u:[0.6,0.6,1.1,1.05,1.25,1.0,0.6,0.6,1.25,1.1,1.05,0.95]};
@@ -787,36 +774,7 @@ function dayInfo(ms){const D=new Date(ms);const y=D.getUTCFullYear(),m=D.getUTCM
  if(scen==='none'&&day===1&&h32(seed*13)<0.18)scen='concert';
  const r=h32(seed*3);let wx=0;if(m>=6&&m<=8){if(r<0.38)wx=1;else if(m>=7&&r<0.6)wx=3}else if(m===12||m<=2){if(r<0.15)wx=2;else if(r<0.25)wx=1}else if(r<0.2)wx=1;
  return {y,m,d,dow,key,hol,day,scen,wx,noise:0.88+h32(seed*11)*0.24}}
-function computeHist(ids,per){const now=Date.now()+9*3600e3;const today0=Math.floor(now/864e5)*864e5;const hs=ids.map(i=>H[i]);const days=[];
- for(let k=per;k>=1;k--){const di=dayInfo(today0-k*864e5);const hrs=[];
-  for(let hr=0;hr<24;hr++){let mx=0;for(const h of hs){const v=hsModelP(h,di.day,hr,di.scen,di.wx)*SEA[h.type][di.m-1]*di.noise*(di.hol&&(h.type==='x'||h.type==='m')?1.25:1);if(v>mx)mx=v}hrs.push(mx)}
-  days.push({di,hrs,max:Math.max(0,...hrs)})}
- let dh=0,wh=0,dd=0,worst={v:-1};const hsum=new Array(24).fill(0);
- days.forEach(x=>{let dang=false;x.hrs.forEach((v,hr)=>{if(v>=5){dh++;dang=true}else if(v>=4)wh++;if(v>worst.v)worst={v,day:x,hr};hsum[hr]+=v});if(dang)dd++});
- let best=7,bv=1e9;for(let hr=7;hr<=23;hr++){const a=hsum[hr]/days.length;if(a<bv){bv=a;best=hr}}
- return {ids,per,days,dh,wh,dd,worst,best,bv}}
 function causeOf(di){if(di.scen!=='none')return T.s['sc_'+di.scen];const p=[];p.push(di.hol?T.hist.hol:DN[di.day]);if(di.wx)p.push(T.s['w'+di.wx]);return p.join(', ')}
-function histHTML(ids){
- const key=ids.join(',')+'|'+S.rper;if(!S.hcache||S.hcache.key!==key){S.hcache=ids.length?computeHist(ids,S.rper):{ids,per:S.rper,days:[]};S.hcache.key=key}
- const hd=S.hcache,pl=T.per[PERS.indexOf(S.rper)];
- let o=`<div class="rh"><div class="rh-t">${T.hist.title(pl)}</div>`;
- if(!hd.ids.length)return o+`${T.hist.nodata}</div>`;
- const fd=di=>(S.rper>=90?`${di.y}.`:'')+`${di.m}/${di.d}(${WD[di.dow]})`;
- o+=`<div class="rh-s"><span style="color:var(--s3)">${T.hist.stat(hd.dh,hd.dd,hd.wh)}</span></div>`;
- o+=`<div>${T.hist.worst(fd(hd.worst.day.di),hd.worst.hr,hd.worst.v.toFixed(1),causeOf(hd.worst.day.di))}</div>`;
- o+=`<div>${T.hist.best(hd.best,hd.bv.toFixed(1))}</div>`;
- const W=400,HH=96,top=6,bot=16,mx=Math.max(6,...hd.days.map(x=>x.max));const y=v=>top+(HH-top-bot)*(1-v/mx);
- let svg=`<svg viewBox="0 0 ${W} ${HH}" width="100%" height="${HH}" preserveAspectRatio="none" role="img" aria-label="${T.hist.chart}">`;
- [2,4,5].forEach(v=>svg+=`<line x1="0" x2="${W}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)" stroke-dasharray="3 3" vector-effect="non-scaling-stroke"/>`);
- if(S.rper<=7){const pts=[];hd.days.forEach((x,di)=>x.hrs.forEach((v,hr)=>pts.push(v)));const n=pts.length,bw=W/n;
-  pts.forEach((v,i)=>{const l=lv(v);svg+=`<rect x="${i*bw}" y="${y(v)}" width="${Math.max(bw-0.4,0.6)}" height="${HH-bot-y(v)}" fill="var(--s${l})" opacity="${l>=2?1:0.55}"><title>${fd(hd.days[Math.floor(i/24)].di)} ${T.hf(i%24)} ${v.toFixed(1)}${T.u}</title></rect>`});
-  hd.days.forEach((x,di)=>svg+=`<text x="${(di*24+12)*bw}" y="${HH-3}" text-anchor="middle" font-size="9" fill="var(--ink3)">${fd(x.di)}</text>`)}
- else{const n=hd.days.length,bw=W/n;hd.days.forEach((x,i)=>{const l=lv(x.max);svg+=`<rect x="${i*bw}" y="${y(x.max)}" width="${Math.max(bw-0.3,0.5)}" height="${HH-bot-y(x.max)}" fill="var(--s${l})" opacity="${l>=2?1:0.55}"><title>${fd(x.di)} ${x.max.toFixed(1)}${T.u} · ${causeOf(x.di)}</title></rect>`});
-  const step=Math.max(1,Math.round(n/6));for(let i=0;i<n;i+=step)svg+=`<text x="${i*bw}" y="${HH-3}" font-size="9" fill="var(--ink3)">${hd.days[i].di.m}/${hd.days[i].di.d}</text>`}
- svg+='</svg>';
- o+=`<div class="chartlab" style="margin:8px 0 2px">${S.rper<=7?T.hist.hourly:T.hist.daily}</div>${svg}<div style="color:var(--ink3);font-size:12px">${T.hist.note}</div></div>`;
- return o}
-
 let TDC=null;
 const TDP=['today','tom','wknd','w1','w2','m1','yest','pw1','pm1','date'];
 function tdDays(t0){const p=S.tdp||'today',dw=new Date(t0).getUTCDay();
@@ -897,35 +855,6 @@ function flushPush(){if(!PUSHQ.length)return;const scope=S.lv==='nat'?null:S.pro
 $('autop').onchange=e=>{S.autoPush=e.target.checked;if(!S.autoPush)hidePush()};
 $('devn').onclick=async()=>{if(!('Notification' in window)){toast(T.push.devnNo);return}
  try{const p=Notification.permission==='granted'?'granted':await Notification.requestPermission();if(p==='granted'){S.devN=true;$('devn').textContent=T.push.devnOn;$('devn').setAttribute('aria-pressed','true');devNotify(T.push.app,T.push.devnOn)}else toast(T.push.devnNo)}catch(e){toast(T.push.devnNo)}};
-function ptOf(r){return r.k==='hs'?{lon:H[r.id].lon,lat:H[r.id].lat,name:nH(H[r.id])}:{lon:DONG[r.id].lon,lat:DONG[r.id].lat,name:nD(DONG[r.id])}}
-function resolve(v){v=(v||'').trim();if(!v)return null;let r=QL[v];if(!r){const lv2=v.toLowerCase();const k=Object.keys(QL).find(k=>k.toLowerCase().startsWith(lv2))||Object.keys(QL).find(k=>k.toLowerCase().includes(lv2));r=k&&QL[k]}return r||null}
-function along(pts){const near=new Map();
- for(let i=0;i<pts.length-1;i++){const a=pts[i],b=pts[i+1];const n=Math.max(2,Math.ceil(km(a,b)/0.1));
-  for(let j=0;j<=n;j++){const p={lon:a.lon+(b.lon-a.lon)*j/n,lat:a.lat+(b.lat-a.lat)*j/n};H.forEach(h=>{if(km(p,h)<0.6)near.set(h.id,{name:nH(h),d:h.d,id:h.id})})}}
- const arr=[...near.values()].sort((a,b)=>b.d-a.d);return {max:arr.length?arr[0].d:0,list:arr}}
-function renderRoute(){
- const g=d3.select('#groute');g.selectAll('*').remove();const box=$('r-res');
- if(!S.route||!path){box.classList.remove('on');return}
- const A=ptOf(S.route.a),B=ptOf(S.route.b),base=along([A,B]);let det=null;
- if(lv(base.max)>=2){const mid={lon:(A.lon+B.lon)/2,lat:(A.lat+B.lat)/2};const dx=(B.lon-A.lon)*88.2,dy=(B.lat-A.lat)*111,L=Math.hypot(dx,dy)||1,px=-dy/L,py=dx/L;
-  [0.7,-0.7,1.2,-1.2,2,-2].forEach(o=>{const W={lon:mid.lon+o*px/88.2,lat:mid.lat+o*py/111};const r=along([A,W,B]);if(!det||r.max<det.r.max-0.05)det={W,r}});
-  if(det&&lv(det.r.max)>=lv(base.max))det=null}
- const ls=p=>({type:'LineString',coordinates:p.map(x=>[x.lon,x.lat])});
- g.append('path').attr('d',path(ls([A,B]))).attr('fill','none').attr('stroke',det?css('--ink3'):css('--accent')).attr('stroke-width',4).attr('stroke-linecap','round').attr('stroke-dasharray',det?'7 6':null);
- if(det)g.append('path').attr('d',path(ls([A,det.W,B]))).attr('fill','none').attr('stroke',css('--accent')).attr('stroke-width',4).attr('stroke-linecap','round').attr('stroke-linejoin','round');
- [[A,T.rm[0]],[B,T.rm[1]]].forEach(([p,tx])=>{const [x,y]=proj([p.lon,p.lat]);const k=g.append('g').attr('class','rm').attr('data-t',`translate(${x},${y})`).attr('transform',`translate(${x},${y}) scale(${1/(S.k||1)})`);k.append('circle').attr('r',11).attr('fill',css('--accent')).attr('stroke','#fff').attr('stroke-width',2);k.append('text').attr('y',4).attr('text-anchor','middle').attr('font-size',11).attr('fill','#fff').text(tx)});
- let h=T.rhead(A.name,B.name,km(A,B).toFixed(1))+'<br>';const risky=base.list.filter(x=>lv(x.d)>=2);
- if(!risky.length)h+=T.rsafe(base.max.toFixed(1),LV[lv(base.max)]);
- else{h+=`<span style="color:var(--s3);font-weight:500">${T.rrisk(LV[lv(base.max)],risky.slice(0,4).map(x=>x.name+' '+x.d.toFixed(1)+T.u).join(', '))}</span><br>`;
-  h+=det?T.rdet(det.r.max.toFixed(1),LV[lv(det.r.max)]):T.rnodet}
- h+=`<br><span style="color:var(--ink3)">${T.rdemo}</span>`;if(S.rper>0)h+=histHTML(base.list.map(x=>x.id));
- box.innerHTML=h;box.classList.add('on');
-}
-$('r-go').onclick=()=>{const a=resolve($('r-from').value),b=resolve($('r-to').value);if(!a||!b){$('r-err').textContent=T.rerr;return}
- $('r-err').textContent='';S.route={a,b};const ia=a.k==='hs'?H[a.id]:DONG[a.id],ib=b.k==='hs'?H[b.id]:DONG[b.id];
- if(ia.mun===ib.mun)go('mun',ia.mun);else if(ia.prov===ib.prov)go('prov',ia.prov);else go('nat')};
-$('r-per').onchange=e=>{S.rper=+e.target.value;render()};
-$('r-clr').onclick=()=>{S.route=null;$('r-from').value='';$('r-to').value='';$('r-err').textContent='';render()};
 document.querySelectorAll('#cm button').forEach(b=>b.onclick=()=>{S.cmode=b.dataset.c;document.querySelectorAll('#cm button').forEach(x=>x.setAttribute('aria-pressed',x===b));$('cm-note').style.display=S.cmode==='region'?'block':'none';render();applyK()});
 $('scen').onchange=e=>{S.scen=e.target.value;step()};
 document.querySelectorAll('#wx button').forEach(b=>b.onclick=()=>{S.wx=+b.dataset.w;document.querySelectorAll('#wx button').forEach(x=>x.setAttribute('aria-pressed',x===b));step()});
@@ -942,7 +871,7 @@ d3.select('#map').call(zoomB).on('dblclick.zoom',null);
 $('z-in').onclick=()=>d3.select('#map').transition().duration(250).call(zoomB.scaleBy,1.8);
 $('z-out').onclick=()=>d3.select('#map').transition().duration(250).call(zoomB.scaleBy,1/1.8);
 $('z-rst').onclick=()=>d3.select('#map').transition().duration(250).call(zoomB.transform,d3.zoomIdentity);
-function fillOpts(){$('r-per').innerHTML=T.per.map((x,i)=>`<option value="${PERS[i]}"${PERS[i]===S.rper?' selected':''}>${x}</option>`).join('');$('theme').innerHTML=Object.keys(THEMES).map(k=>`<option value="${k}"${k===S.theme?' selected':''}>${T.th[k]}</option>`).join('');
+function fillOpts(){$('theme').innerHTML=Object.keys(THEMES).map(k=>`<option value="${k}"${k===S.theme?' selected':''}>${T.th[k]}</option>`).join('');
 $('dpal').innerHTML=Object.keys(DPAL).map(k=>`<option value="${k}"${k===S.dpal?' selected':''}>${T.dp[k]}</option>`).join('')}
 function applyLang(){T=I18N[LANG];LV=T.lv;DN=T.dn;WD=T.wd;TN=T.tn;document.documentElement.lang=LANG==='zh'?'zh-CN':LANG;
  document.querySelectorAll('[data-i]').forEach(el=>{const v=T.s[el.dataset.i];if(v!==undefined)el.textContent=v});
@@ -965,13 +894,11 @@ const dFc=f=>document.querySelector(`#fc button[data-f="${f}"]`).click();
 const dLang=l=>document.querySelector(`#lang button[data-l="${l}"]`).click();
 const dView=el=>{el.scrollIntoView({behavior:'smooth',block:'center'});document.querySelectorAll('.demo-hl').forEach(x=>x.classList.remove('demo-hl'));el.classList.add('demo-hl')};
 const DSTEPS=[
- {ko:'평범한 평일 저녁 7시. 서울 전역의 인파 밀집도를 한눈에 보여줍니다.',en:'A normal weekday at 7 p.m.: crowd density across Seoul, updated every 5 seconds.',run:()=>{dLang(DEMO.lang0==='ko'?'ko':DEMO.lang0);$('r-clr').click();dFc(0);dScen('none');dSetMan(0,19);go('prov','11');dView(document.querySelector('.mapcard'))},d:7000},
+ {ko:'평범한 평일 저녁 7시. 서울 전역의 인파 밀집도를 한눈에 보여줍니다.',en:'A normal weekday at 7 p.m.: crowd density across Seoul, updated every 5 seconds.',run:()=>{dLang(DEMO.lang0==='ko'?'ko':DEMO.lang0);dFc(0);dScen('none');dSetMan(0,19);go('prov','11');dView(document.querySelector('.mapcard'))},d:7000},
  {ko:'핼러윈 주말 밤 9시. 이태원·홍대·신촌 일대가 순식간에 위험 단계로 바뀝니다.',en:'Halloween weekend, 9 p.m.: Itaewon, Hongdae and Sinchon turn to danger.',run:()=>{dSetMan(1,21);dScen('halloween')},d:7000},
  {ko:'위험 구역이 생기면 그 지역만 빨간 테두리로 반짝이며 강조됩니다.',en:'When danger appears, only the dangerous areas blink with a red outline.',run:()=>{},d:6500},
  {ko:'이태원역으로 확대하면 동 단위, 50m 블록 단위까지 어디가 붐비는지 볼 수 있습니다.',en:'Zoom into Itaewon Station to see density down to 50 m blocks.',run:async()=>{const h=dPlace('이태원역');await dz(500);dZoom(h,3.5)},d:8000},
  {ko:'아직 저녁 7시라도, 1시간 뒤 예측 지도로 다가올 위험을 미리 알려줍니다.',en:'Even at 7 p.m., the 1-hour forecast map warns of danger ahead.',run:async()=>{dSetMan(1,19);await dz(300);dFc(1)},d:8000},
- {ko:'한남동에서 용산역으로 갈 때, 위험한 이태원역을 피해 가는 우회 경로를 안내합니다.',en:'Going from Hannam-dong to Yongsan Station, the app suggests a detour around Itaewon.',run:async()=>{dFc(0);dSetMan(1,21);go('mun',H.find(x=>x.name==='이태원역').mun);$('r-from').value='한남동';$('r-to').value='용산역';$('r-per').value='0';ev($('r-per'),'change');$('r-go').click();await dz(400);dView($('r-res'))},d:8500},
- {ko:'지난 1년 기록을 보면, 평소엔 안전한 이 길도 작년 핼러윈에는 매우 위험했습니다.',en:'One year of history shows this usually safe route was very dangerous last Halloween.',run:async()=>{$('r-per').value='365';ev($('r-per'),'change');await dz(300);dView($('r-res'))},d:8500},
  {ko:'외국인 관광객도 이해할 수 있도록 경고와 안내를 4개 언어로 제공합니다.',en:'Warnings and guidance are available in four languages for visitors.',run:async()=>{dView(document.querySelector('.mapcard'));dLang('en');await dz(2600);dLang('ja');await dz(2600);dLang('zh')},d:8500},
  {ko:'오늘의 안전 안내는 오늘 조심할 장소와 앞으로 2주간 위험한 날을 미리 알려줍니다.',en:"Today's safety guide lists places to watch today and risky days in the next two weeks.",run:()=>{dLang(DEMO.lang0);dView($('today'))},d:8000},
  {ko:'CCTV 영상 → 비전 AI 인원 계산 → 위험 판정 → 지도·알림. 보행자가 스스로 위험을 피하는 지도입니다.',en:'CCTV → vision AI counting → risk detection → map and alerts: a map that helps people avoid danger.',run:()=>{dView(document.querySelector('.mapcard'));d3.select('#map').transition().duration(1000).call(zoomB.transform,d3.zoomIdentity)},d:7000}];
@@ -989,7 +916,7 @@ $('ex-about').onclick=()=>{document.querySelectorAll('.ab-lang').forEach(x=>x.st
 $('about-x').onclick=()=>{try{$('about').close()}catch(e){$('about').removeAttribute('open')}};
 $('about').addEventListener('click',e=>{if(e.target===$('about'))$('about-x').click()});
 $('ex-full').onclick=async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen()}catch(e){toast(T.s.exfullerr)}};
-$('ex-reset').onclick=()=>{demoStop();$('r-clr').click();dFc(0);dScen('auto');$('m-live').click();go('prov','11');window.scrollTo({top:0,behavior:'smooth'})};
+$('ex-reset').onclick=()=>{demoStop();dFc(0);dScen('auto');$('m-live').click();go('prov','11');window.scrollTo({top:0,behavior:'smooth'})};
 function makeQR(v){const b=$('qr-box');b.innerHTML='';if(!v||!window.QRCode)return;try{new QRCode(b,{text:v,width:200,height:200,correctLevel:QRCode.CorrectLevel.M})}catch(e){}}
 $('qr-in').addEventListener('input',e=>{const v=e.target.value.trim();try{localStorage.setItem('crowd-qr',v)}catch(_){}makeQR(v)});
 (()=>{let v='';try{v=localStorage.getItem('crowd-qr')||''}catch(_){}if(!v||v.includes('claude.ai')||v.includes('github.io'))v='https://livespot10.vercel.app/';$('qr-in').value=v;if(v)setTimeout(()=>makeQR(v),500)})();
