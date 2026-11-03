@@ -41,7 +41,7 @@ h1{font-size:24px;font-weight:600;margin:0;letter-spacing:-0.01em}
 .seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
 .seg button{border:0;background:transparent;padding:6px 12px;font-size:14px}
 .seg button+button{border-left:1px solid var(--line)}
-.seg button[aria-pressed="true"]{background:var(--accent-bg);color:var(--accent);font-weight:500}
+.seg button[aria-pressed="true"]{background:var(--accent);color:#fff;font-weight:600}
 .search{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:6px 10px;font-size:14px;min-width:220px}
 .manual{display:none;align-items:center;gap:10px;flex:1;min-width:240px}
 .manual.on{display:flex}
@@ -208,7 +208,7 @@ h2{font-size:16px;font-weight:600;margin:0 0 10px}
 .area:hover{fill-opacity:.8}
 .err{font-size:12px;color:var(--s3);margin-left:4px}
 .chip{border:1px solid var(--line);background:transparent;border-radius:999px;padding:4px 12px;font-size:13px}
-.chip[aria-pressed="true"]{background:var(--accent-bg);color:var(--accent);border-color:var(--accent)}
+.chip[aria-pressed="true"]{background:var(--accent);color:#fff;border-color:var(--accent);font-weight:500}
 .bar label{display:inline-flex;align-items:center;gap:6px;font-size:14px}
 .grp{display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap}
 .grp .l,.bar .l{font-size:13px;color:var(--ink2)}
@@ -494,7 +494,7 @@ const PHUE={'11':215,'21':195,'22':35,'23':172,'12':95,'25':248,'26':158,'29':11
 const PNICK={'11':'한강 블루','21':'바다 블루','22':'사과 앰버','23':'항구 청록','12':'남도 빛','25':'과학 인디고','26':'고래 바다색','29':'행정 초록','31':'경기 초록','32':'산맥 연두','33':'내륙 올리브','34':'들녘 황금','35':'한옥 자주','37':'신라 토색','38':'남해 물빛','39':'감귤 노랑'};
 function hueTheme(h,dark){const c=(s,l)=>d3.hsl(h,s,l).formatHex();return dark?{bg:c(.35,.08),panel:c(.3,.12),ink:c(.25,.92),ink2:c(.15,.72),ink3:c(.1,.55),line:c(.25,.2),land:c(.28,.18),'land-line':c(.25,.34),accent:c(.7,.68),'accent-bg':c(.45,.2)}
  :{bg:c(.4,.955),panel:'#FFFFFF',ink:c(.4,.12),ink2:c(.18,.35),ink3:c(.12,.52),line:c(.28,.87),land:c(.32,.87),'land-line':c(.25,.68),accent:c(.65,.4),'accent-bg':c(.6,.93)}}
-const THEMES={city:{n:'city',l:{bg:'#F5F5F2',panel:'#FFFFFF',ink:'#1D232B',ink2:'#525A64',ink3:'#8A919A',line:'#E2E2DC',land:'#ECEBE6','land-line':'#C9C7BF',accent:'#2F4A6D','accent-bg':'#E6EBF2'},d:{bg:'#121417',panel:'#1A1D21',ink:'#E8EAEC',ink2:'#A9AFB6',ink3:'#7D848C',line:'#2A2E34',land:'#24282D','land-line':'#3E444C',accent:'#8FB0D8','accent-bg':'#22303F'}},auto:{n:'시·도별 자동',auto:true},sea:{n:'바다',l:{bg:'#EEF4F8',panel:'#FFFFFF',ink:'#0F2233',ink2:'#46607A',ink3:'#7890A6',line:'#D3E0EA',land:'#D3E3EE','land-line':'#9FBBD0',accent:'#0B6FB8','accent-bg':'#E1EEF8'},d:{bg:'#0A1622',panel:'#102233',ink:'#E3EEF6',ink2:'#A6BDD0',ink3:'#7891A6',line:'#1E3A50',land:'#183247','land-line':'#2E5470',accent:'#5AB0F0','accent-bg':'#12324D'}},
+const THEMES={city:{n:'city',l:{bg:'#F5F5F2',panel:'#FFFFFF',ink:'#0E141B',ink2:'#3A4450',ink3:'#6B7480',line:'#DEDED7',land:'#ECEBE6','land-line':'#C2C0B8',accent:'#0B57D0','accent-bg':'#DCE8FF'},d:{bg:'#121417',panel:'#1A1D21',ink:'#F4F6F8',ink2:'#C6CCD3',ink3:'#8D949C',line:'#30353C',land:'#24282D','land-line':'#454C55',accent:'#6EA8FF','accent-bg':'#1B3157'}},auto:{n:'시·도별 자동',auto:true},sea:{n:'바다',l:{bg:'#EEF4F8',panel:'#FFFFFF',ink:'#0F2233',ink2:'#46607A',ink3:'#7890A6',line:'#D3E0EA',land:'#D3E3EE','land-line':'#9FBBD0',accent:'#0B6FB8','accent-bg':'#E1EEF8'},d:{bg:'#0A1622',panel:'#102233',ink:'#E3EEF6',ink2:'#A6BDD0',ink3:'#7891A6',line:'#1E3A50',land:'#183247','land-line':'#2E5470',accent:'#5AB0F0','accent-bg':'#12324D'}},
  forest:{n:'숲',l:{bg:'#F1F5EF',panel:'#FFFFFF',ink:'#14261A',ink2:'#4B6352',ink3:'#7D9182',line:'#D8E3D3',land:'#DCE7D6','land-line':'#AFC3A5',accent:'#2F7D4F','accent-bg':'#E2F0E6'},d:{bg:'#0E1A12',panel:'#142419',ink:'#E4EEE6',ink2:'#A7BCAD',ink3:'#7C9283',line:'#23392A',land:'#1E3324','land-line':'#3A5A43',accent:'#6CC08E','accent-bg':'#1A3A26'}},
  night:{n:'야간',dark:true,d:{bg:'#0B0F1A',panel:'#121829',ink:'#E6E9F2',ink2:'#A9B0C6',ink3:'#7A829B',line:'#222B42',land:'#1B2338','land-line':'#33405E',accent:'#7C9CFF','accent-bg':'#1C2648'}},
  base:{n:'기본(회색)',l:{bg:'#F3F6F7',panel:'#FFFFFF',ink:'#17242C',ink2:'#4A5A63',ink3:'#7A8A92',line:'#D9E1E4',land:'#E3EAED','land-line':'#B9C6CC',accent:'#1F6FEB','accent-bg':'#E4EEFD'},d:{bg:'#0E171C',panel:'#16222A',ink:'#E5ECEF',ink2:'#A9B7BE',ink3:'#7D8C94',line:'#26353E',land:'#1D2B33','land-line':'#38505C',accent:'#5B9BFF','accent-bg':'#17304F'}}};
