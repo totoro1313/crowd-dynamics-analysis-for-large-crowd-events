@@ -656,18 +656,27 @@ function stationSVG(fill,hub,edge){return (hub?`<rect x="-15" y="-15" width="30"
  `<path d="M-4.5,5.5 L-7,9 M4.5,5.5 L7,9" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/>`}
 const kindOf=p=>p.type==='u'?'univ':isSt(p)?(p.type==='x'?'hub':'st'):p.type==='i'?'mall':p.type==='m'?'market':p.type==='v'?'venue':/공원|숲|정원|호수|센트럴파크/.test(p.name)?'park':null;
 const BADGE=(fill,edge)=>`<rect x="-11.5" y="-11.5" width="23" height="23" rx="6" fill="${fill}" stroke="${edge}" stroke-width="2.2"/>`;
-const CAT={hub:'#475569',st:'#2B4C8C',park:'#2E9157',market:'#9A5B2E',univ:'#12808A',venue:'#7A3E9D'};
+const CAT={st:'#1E3A8A',hub:'#EA580C',park:'#15803D',market:'#B45309',univ:'#111827',venue:'#0E7490',mall:'#BE123C'};
 const LVDOT=c=>`<circle cx="10.5" cy="-10.5" r="5.6" fill="${c}" stroke="#fff" stroke-width="2"/>`;
-function markerSVG(kind,lc,edge){
- if(kind==='hub')return `<circle r="12.5" fill="${CAT.hub}" stroke="${edge}" stroke-width="2.2"/><path d="M-6.5,-3.5 H6 M3,-6.5 L6,-3.5 L3,-0.5" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M6.5,3.5 H-6 M-3,0.5 L-6,3.5 L-3,6.5" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>`+LVDOT(lc);
- if(kind==='st')return stationSVG(CAT.st,false,edge)+LVDOT(lc);
- if(kind==='park')return parkSVG(CAT.park,edge)+LVDOT(lc);
- if(kind==='univ')return BADGE(CAT.univ,edge)+`<path d="M0,-8.5 L10,-3.5 L0,1.5 L-10,-3.5 Z" fill="#fff"/><path d="M-6,-1.2 V3.6 Q0,8 6,3.6 V-1.2 L0,1.8 Z" fill="#fff"/><path d="M8,-2.6 V4.2" stroke="#fff" stroke-width="1.4" stroke-linecap="round"/><circle cx="8" cy="5.4" r="1.4" fill="#fff"/>`+LVDOT(lc);
- if(kind==='venue')return BADGE(CAT.venue,edge)+`<path d="M-6.8,-4.6 V-9 M6.8,-4.6 V-9" stroke="#fff" stroke-width="1.4" stroke-linecap="round"/><rect x="-8.6" y="-10.6" width="3.6" height="2.4" rx="0.6" fill="#fff"/><rect x="5" y="-10.6" width="3.6" height="2.4" rx="0.6" fill="#fff"/><path d="M-9.5,-1 A9.5,4.2 0 0 0 9.5,-1 V3.6 A9.5,4.2 0 0 1 -9.5,3.6 Z" fill="#fff"/><ellipse cx="0" cy="-1" rx="9.5" ry="4.2" fill="${CAT.venue}" stroke="#fff" stroke-width="1.8"/><ellipse cx="0" cy="-1" rx="5" ry="2" fill="#fff"/>`+LVDOT(lc);
- if(kind==='market')return BADGE(CAT.market,edge)+`<rect x="-8.5" y="-8.5" width="17" height="5.5" rx="1" fill="#fff"/><rect x="-5.1" y="-8.5" width="3.4" height="5.5" fill="${CAT.market}"/><rect x="1.7" y="-8.5" width="3.4" height="5.5" fill="${CAT.market}"/><path d="M-8.5,-3 a2.83,2.83 0 0 0 5.67,0 a2.83,2.83 0 0 0 5.67,0 a2.83,2.83 0 0 0 5.67,0 Z" fill="#fff"/><rect x="-7" y="1" width="14" height="7" rx="1" fill="none" stroke="#fff" stroke-width="1.7"/><rect x="-2" y="3" width="4" height="5" fill="#fff"/>`+LVDOT(lc);
- return mallSVG(lc,edge)}
-function parkSVG(fill,edge){return BADGE(fill,edge)+`<circle cx="0" cy="-4.6" r="4.4" fill="#fff"/><circle cx="-3.6" cy="-0.6" r="3.8" fill="#fff"/><circle cx="3.6" cy="-0.6" r="3.8" fill="#fff"/><rect x="-1.2" y="1.5" width="2.4" height="6" rx="0.8" fill="#fff"/><path d="M-6.5,8 H6.5" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/>`}
-function mallSVG(fill,edge){return BADGE(fill,edge)+`<path d="M-3.4,-3.2 V-4.6 a3.4,3.4 0 0 1 6.8,0 V-3.2" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round"/><path d="M-7,-3.2 H7 L6,8 H-6 Z" fill="#fff" stroke="#fff" stroke-width="1" stroke-linejoin="round"/><circle cx="-3" cy="0" r="1.1" fill="${fill}"/><circle cx="3" cy="0" r="1.1" fill="${fill}"/>`}
+function shapeEl(k,fill,edge){const a=`fill="${fill}" stroke="${edge}" stroke-width="2.2" stroke-linejoin="round"`;
+ if(k==='hub')return `<circle r="12.5" ${a}/>`;
+ if(k==='park')return `<path d="M13,0 L6.5,11.3 L-6.5,11.3 L-13,0 L-6.5,-11.3 L6.5,-11.3 Z" ${a}/>`;
+ if(k==='market')return `<path d="M0,-13.5 L13,-3.5 L13,11.5 L-13,11.5 L-13,-3.5 Z" ${a}/>`;
+ if(k==='univ')return `<path d="M0,-15 L15,0 L0,15 L-15,0 Z" ${a}/>`;
+ if(k==='venue')return `<path d="M5.3,-12.8 L12.8,-5.3 L12.8,5.3 L5.3,12.8 L-5.3,12.8 L-12.8,5.3 L-12.8,-5.3 L-5.3,-12.8 Z" ${a}/>`;
+ if(k==='mall')return `<path d="M0,15 C-3.5,10 -12.5,5 -12.5,-2.5 A12.5,12.5 0 1 1 12.5,-2.5 C12.5,5 3.5,10 0,15 Z" ${a}/>`;
+ return ''}
+function glyph(k,fill){
+ if(k==='hub')return `<path d="M-6.5,-3.5 H6 M3,-6.5 L6,-3.5 L3,-0.5" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M6.5,3.5 H-6 M-3,0.5 L-6,3.5 L-3,6.5" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>`;
+ if(k==='park')return `<g transform="scale(.92)"><circle cx="0" cy="-4.6" r="4.4" fill="#fff"/><circle cx="-3.6" cy="-0.6" r="3.8" fill="#fff"/><circle cx="3.6" cy="-0.6" r="3.8" fill="#fff"/><rect x="-1.2" y="1.5" width="2.4" height="6" rx="0.8" fill="#fff"/></g>`;
+ if(k==='market')return `<g transform="translate(0,2) scale(.8)"><rect x="-8.5" y="-8.5" width="17" height="5.5" rx="1" fill="#fff"/><rect x="-5.1" y="-8.5" width="3.4" height="5.5" fill="${fill}"/><rect x="1.7" y="-8.5" width="3.4" height="5.5" fill="${fill}"/><path d="M-8.5,-3 a2.83,2.83 0 0 0 5.67,0 a2.83,2.83 0 0 0 5.67,0 a2.83,2.83 0 0 0 5.67,0 Z" fill="#fff"/><rect x="-7" y="1" width="14" height="7" rx="1" fill="none" stroke="#fff" stroke-width="1.7"/><rect x="-2" y="3" width="4" height="5" fill="#fff"/></g>`;
+ if(k==='univ')return `<g transform="translate(0,1) scale(.72)"><path d="M0,-8.5 L10,-3.5 L0,1.5 L-10,-3.5 Z" fill="#fff"/><path d="M-6,-1.2 V3.6 Q0,8 6,3.6 V-1.2 L0,1.8 Z" fill="#fff"/><path d="M8,-2.6 V4.2" stroke="#fff" stroke-width="1.4" stroke-linecap="round"/><circle cx="8" cy="5.4" r="1.4" fill="#fff"/></g>`;
+ if(k==='venue')return `<g transform="translate(0,1) scale(.85)"><path d="M-6.8,-4.6 V-9 M6.8,-4.6 V-9" stroke="#fff" stroke-width="1.4" stroke-linecap="round"/><rect x="-8.6" y="-10.6" width="3.6" height="2.4" rx="0.6" fill="#fff"/><rect x="5" y="-10.6" width="3.6" height="2.4" rx="0.6" fill="#fff"/><path d="M-9.5,-1 A9.5,4.2 0 0 0 9.5,-1 V3.6 A9.5,4.2 0 0 1 -9.5,3.6 Z" fill="#fff"/><ellipse cx="0" cy="-1" rx="9.5" ry="4.2" fill="${fill}" stroke="#fff" stroke-width="1.8"/><ellipse cx="0" cy="-1" rx="5" ry="2" fill="#fff"/></g>`;
+ if(k==='mall')return `<g transform="translate(0,-2.5) scale(.82)"><path d="M-3.4,-3.2 V-4.6 a3.4,3.4 0 0 1 6.8,0 V-3.2" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round"/><path d="M-7,-3.2 H7 L6,8 H-6 Z" fill="#fff"/><circle cx="-3" cy="0" r="1.1" fill="${fill}"/><circle cx="3" cy="0" r="1.1" fill="${fill}"/></g>`;
+ return ''}
+function iconSVG(k,edge){return k==='st'?stationSVG(CAT.st,false,edge):shapeEl(k,CAT[k],edge)+glyph(k,CAT[k])}
+function markerSVG(kind,lc,edge){return iconSVG(kind,edge)+LVDOT(lc)}
+function fixLegend(){[['lgst','st'],['lgsx','hub'],['lgpk','park'],['lgml','mall'],['lgmk','market'],['lgun','univ'],['lgvn','venue']].forEach(([i,k])=>{const s=document.querySelector(`[data-i="${i}"]`);const svg=s&&s.previousElementSibling;if(svg&&svg.tagName.toLowerCase()==='svg'){svg.setAttribute('viewBox','-17 -17 34 34');svg.innerHTML=iconSVG(k,'#fff')}})}
 function render(){return withFc(renderCore)}
 function renderCore(){
  const c=ctx();const A=areas();
@@ -689,7 +698,7 @@ function renderCore(){
  const R=S.lv==='mun'?9:7,isSel=p=>S.sel.k==='hs'&&S.sel.id===p.id;
  nodes.select('.ring').attr('r',R).attr('fill',p=>css('--s'+lv(p.d))).attr('class',p=>'ring'+(lv(p.d)===3?' pulse':'')).attr('opacity',p=>lv(p.d)===3?0.7:0);
  nodes.select('.core').attr('r',p=>isSel(p)?R+3:R).attr('fill',p=>css('--s'+lv(p.d))).attr('stroke',p=>isSel(p)?css('--ink'):'#fff').attr('stroke-width',2).style('display',p=>kindOf(p)?'none':null);
- nodes.select('.sti').style('display',p=>kindOf(p)?null:'none').attr('transform',p=>`scale(${(isSel(p)?R+2:R)/10})`).html(p=>{const k=kindOf(p);if(!k)return '';const l=lv(p.d),lc=css('--s'+l);return markerSVG(k,lc,isSel(p)?css('--ink'):(k!=='mall'&&l>=2?lc:'#fff'))});
+ nodes.select('.sti').style('display',p=>kindOf(p)?null:'none').attr('transform',p=>`scale(${(isSel(p)?R+2:R)/10})`).html(p=>{const k=kindOf(p);if(!k)return '';const l=lv(p.d),lc=css('--s'+l);return markerSVG(k,lc,isSel(p)?css('--ink'):(l>=2?lc:'#fff'))});
  nodes.select('text').attr('x',p=>kindOf(p)==='hub'?R*1.55+6:kindOf(p)?R*1.25+5:R+5).attr('y',4).attr('font-size',12).attr('font-weight',600).attr('fill',css('--ink')).attr('paint-order','stroke').attr('stroke',css('--panel')).attr('stroke-width',3)
   .text(p=>showLab(p,V.length)?nH(p):'');
  let items;
@@ -973,7 +982,7 @@ $('sim-load').onclick=simLoad;
 applyLang();
 $('theme').onchange=e=>{S.theme=e.target.value;savePref();applyTheme();drawMap();render();applyK()};
 $('dpal').onchange=e=>{S.dpal=e.target.value;savePref();applyTheme();drawMap();render();applyK()};
-applyTheme();drawMap();step();clock();applyK();simFill();simLoad();simAnim();
+applyTheme();drawMap();step();clock();applyK();fixLegend();simFill();simLoad();simAnim();
 setInterval(()=>{if(S.mode!=='man')clock();S.tick--;if(S.tick<=0){S.tick=5;if(S.mode==='fast'){S.simMin+=10;if(S.simMin>=1440){S.simMin-=1440;S.simDow=(S.simDow+1)%7}}step()}$('next').textContent=T.next(S.tick)},1000);
 </script>
 </body>
