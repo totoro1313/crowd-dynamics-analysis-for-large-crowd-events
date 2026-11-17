@@ -251,7 +251,7 @@ select.sel{background:var(--panel);border:1px solid var(--line);border-radius:8p
 <header>
   <div>
     <h1 data-i="title">실시간 인파 밀집도 지도</h1>
-    <p class="sub" data-i="sub">서울 90개 주요 장소와 427개 동(2026년 7월 기준)의 1㎡당 인원을 5초마다 갱신합니다</p>
+    <p class="sub" data-i="sub" style="display:none">서울 90개 주요 장소와 427개 동(2026년 7월 기준)의 1㎡당 인원을 5초마다 갱신합니다</p>
   </div>
   <div class="clock"><div class="exb" role="group" aria-label="exhibition"><button id="ex-demo" class="exbtn exmain">▶ <span data-i="exdemo">자동 시연</span></button><button id="ex-about" class="exbtn" data-i="exabout">프로젝트 소개</button><button id="ex-full" class="exbtn" data-i="exfull">전체 화면</button><button id="ex-reset" class="exbtn" data-i="exreset">처음으로</button></div><div class="seg" id="lang" role="group" aria-label="Language"><button data-l="ko" aria-pressed="true">한국어</button><button data-l="en" aria-pressed="false">English</button><button data-l="zh" aria-pressed="false">中文</button><button data-l="ja" aria-pressed="false">日本語</button></div>
     <span class="live" id="live"><span class="dot"></span><span id="live-txt">실시간</span></span>
@@ -338,7 +338,7 @@ select.sel{background:var(--panel);border:1px solid var(--line);border-radius:8p
       <div class="chartlab" data-i="today">오늘 시간대별 예상 밀집도</div>
       <svg id="day24" viewBox="0 0 400 90" width="100%" height="90" aria-label="시간대별 예상 밀집도"></svg>
     </div>
-    <div class="card">
+    <div class="card" style="display:none">
       <div class="stats">
         <div class="stat"><small id="s-nl">표시 지역</small><b id="s-n">0</b></div>
         <div class="stat"><small data-i="warn">경고</small><b id="s-w" style="color:var(--s2)">0</b></div>
