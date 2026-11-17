@@ -46,7 +46,8 @@ h1{font-size:24px;font-weight:600;margin:0;letter-spacing:-0.01em}
 .manual{display:none;align-items:center;gap:10px;flex:1;min-width:240px}
 .manual.on{display:flex}
 input[type=range]{flex:1;accent-color:var(--accent)}
-.grid{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:16px}
+.grid{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(0,1fr);gap:16px}
+@media (min-width:881px){.grid>.mapcard{position:sticky;top:12px}.mapwrap{margin:0 auto}}
 @media (max-width:880px){.grid{grid-template-columns:minmax(0,1fr)}}
 .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px}
 .mapcard{padding:8px;position:relative;align-self:start;background:#ECEFF3;border-color:#D2DAE3}
@@ -625,7 +626,9 @@ function drawHeatCore(){
    hctx.fillStyle=g;hctx.beginPath();hctx.arc(cx,cy,r,0,2*Math.PI);hctx.fill()})});
  hctx.restore();
 }
-window.addEventListener('resize',()=>drawHeat());
+function fitMap(){const card=document.querySelector('.mapcard'),mw=document.querySelector('.mapwrap');if(!card||!mw)return;if(innerWidth<881){mw.style.width='';return}mw.style.width='';const full=mw.clientWidth;const chrome=card.offsetHeight-mw.offsetHeight;const avail=innerHeight-24-chrome;const w=Math.max(320,Math.min(full,avail*600/640));mw.style.width=w+'px'}
+window.addEventListener('resize',()=>{fitMap();drawHeat();if(window.applyK)applyK()});
+setTimeout(()=>{fitMap();drawHeat();applyK()},50);
 function applyK(){return withFc(applyKCore)}
 function applyKCore(){const k=S.k||1;
  d3.selectAll('#gm g.pt').attr('transform',p=>{const[x,y]=proj([p.lon,p.lat]);return `translate(${x},${y}) scale(${1/k})`});
