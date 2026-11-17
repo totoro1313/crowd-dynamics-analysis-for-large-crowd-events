@@ -166,6 +166,10 @@ dialog#about::backdrop{background:rgba(0,0,0,.5)}
 @keyframes livepulse{50%{opacity:.25}}
 @media (prefers-reduced-motion:reduce){#m-live .live-ic path{animation:none}}
 #m-man .live-ic path,#m-past .live-ic path{animation:none}
+#cm button[aria-pressed="true"]{background:#0F766E;color:#fff}
+#types .chip[aria-pressed="true"]{background:#0F766E;border-color:#0F766E;color:#fff}
+#types .chip[aria-pressed="false"]{color:#0F766E;border-color:#9CCFC8}
+@media (prefers-color-scheme:dark){#cm button[aria-pressed="true"],#types .chip[aria-pressed="true"]{background:#14B8A6;border-color:#14B8A6;color:#06201D}#types .chip[aria-pressed="false"]{color:#5EEAD4;border-color:#1F5A54}}
 .zlv{position:absolute;left:10px;bottom:10px;font-size:12px;color:var(--ink2);background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:2px 8px;z-index:2}
 .crumb{display:flex;flex-wrap:wrap;align-items:center;gap:4px;padding:6px 8px 2px;font-size:14px}
 .crumb button{border:0;background:transparent;padding:2px 6px;border-radius:6px;color:var(--accent)}
