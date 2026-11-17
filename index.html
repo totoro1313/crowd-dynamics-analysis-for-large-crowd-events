@@ -663,7 +663,7 @@ function shapeEl(k,fill,edge){const a=`fill="${fill}" stroke="${edge}" stroke-wi
  if(k==='hub')return `<circle r="12.5" ${a}/>`;
  if(k==='term')return `<rect x="-15" y="-11" width="30" height="22" rx="5" ${a}/>`;
  if(k==='park')return `<path d="M13,0 L6.5,11.3 L-6.5,11.3 L-13,0 L-6.5,-11.3 L6.5,-11.3 Z" ${a}/>`;
- if(k==='market')return `<path d="M0,-13.5 L13,-3.5 L13,11.5 L-13,11.5 L-13,-3.5 Z" ${a}/>`;
+ if(k==='market')return `<path d="M0,-14.5 L12.5,-9.5 V1.5 C12.5,8 6.5,12.5 0,15 C-6.5,12.5 -12.5,8 -12.5,1.5 V-9.5 Z" ${a}/>`;
  if(k==='univ')return `<path d="M0,-15 L15,0 L0,15 L-15,0 Z" ${a}/>`;
  if(k==='venue')return `<path d="M5.3,-12.8 L12.8,-5.3 L12.8,5.3 L5.3,12.8 L-5.3,12.8 L-12.8,5.3 L-12.8,-5.3 L-5.3,-12.8 Z" ${a}/>`;
  if(k==='mall')return `<path d="M0,15 C-3.5,10 -12.5,5 -12.5,-2.5 A12.5,12.5 0 1 1 12.5,-2.5 C12.5,5 3.5,10 0,15 Z" ${a}/>`;
@@ -672,7 +672,7 @@ function glyph(k,fill){
  if(k==='term')return `<rect x="-7" y="-4" width="14" height="10" rx="2" fill="#1F2937"/><path d="M-3,-4 V-6.8 H3 V-4" fill="none" stroke="#1F2937" stroke-width="1.8" stroke-linejoin="round"/><path d="M-3.2,-2.5 V4.5 M3.2,-2.5 V4.5" stroke="${fill}" stroke-width="1.4"/>`;
  if(k==='hub')return `<path d="M-6.5,-3.5 H6 M3,-6.5 L6,-3.5 L3,-0.5" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M6.5,3.5 H-6 M-3,0.5 L-6,3.5 L-3,6.5" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>`;
  if(k==='park')return `<g transform="scale(.92)"><circle cx="0" cy="-4.6" r="4.4" fill="#fff"/><circle cx="-3.6" cy="-0.6" r="3.8" fill="#fff"/><circle cx="3.6" cy="-0.6" r="3.8" fill="#fff"/><rect x="-1.2" y="1.5" width="2.4" height="6" rx="0.8" fill="#fff"/></g>`;
- if(k==='market')return `<g transform="translate(0,2) scale(.8)"><rect x="-8.5" y="-8.5" width="17" height="5.5" rx="1" fill="#fff"/><rect x="-5.1" y="-8.5" width="3.4" height="5.5" fill="${fill}"/><rect x="1.7" y="-8.5" width="3.4" height="5.5" fill="${fill}"/><path d="M-8.5,-3 a2.83,2.83 0 0 0 5.67,0 a2.83,2.83 0 0 0 5.67,0 a2.83,2.83 0 0 0 5.67,0 Z" fill="#fff"/><rect x="-7" y="1" width="14" height="7" rx="1" fill="none" stroke="#fff" stroke-width="1.7"/><rect x="-2" y="3" width="4" height="5" fill="#fff"/></g>`;
+ if(k==='market')return `<g transform="translate(0,1)"><path d="M-4.6,-2.5 L-1.8,-7.5 M4.6,-2.5 L1.8,-7.5" stroke="#fff" stroke-width="1.9" stroke-linecap="round"/><path d="M-8.2,-2.5 H8.2 L6.2,6 H-6.2 Z" fill="#fff" stroke="#fff" stroke-width="1" stroke-linejoin="round"/><path d="M-3,0 V4 M0,0 V4 M3,0 V4" stroke="${fill}" stroke-width="1.4" stroke-linecap="round"/></g>`;
  if(k==='univ')return `<g transform="translate(0,1) scale(.72)"><path d="M0,-8.5 L10,-3.5 L0,1.5 L-10,-3.5 Z" fill="#fff"/><path d="M-6,-1.2 V3.6 Q0,8 6,3.6 V-1.2 L0,1.8 Z" fill="#fff"/><path d="M8,-2.6 V4.2" stroke="#fff" stroke-width="1.4" stroke-linecap="round"/><circle cx="8" cy="5.4" r="1.4" fill="#fff"/></g>`;
  if(k==='venue')return `<g transform="translate(0,1) scale(.85)"><path d="M-6.8,-4.6 V-9 M6.8,-4.6 V-9" stroke="#fff" stroke-width="1.4" stroke-linecap="round"/><rect x="-8.6" y="-10.6" width="3.6" height="2.4" rx="0.6" fill="#fff"/><rect x="5" y="-10.6" width="3.6" height="2.4" rx="0.6" fill="#fff"/><path d="M-9.5,-1 A9.5,4.2 0 0 0 9.5,-1 V3.6 A9.5,4.2 0 0 1 -9.5,3.6 Z" fill="#fff"/><ellipse cx="0" cy="-1" rx="9.5" ry="4.2" fill="${fill}" stroke="#fff" stroke-width="1.8"/><ellipse cx="0" cy="-1" rx="5" ry="2" fill="#fff"/></g>`;
  if(k==='mall')return `<g transform="translate(0,-2.5) scale(.82)"><path d="M-3.4,-3.2 V-4.6 a3.4,3.4 0 0 1 6.8,0 V-3.2" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round"/><path d="M-7,-3.2 H7 L6,8 H-6 Z" fill="#fff"/><circle cx="-3" cy="0" r="1.1" fill="${fill}"/><circle cx="3" cy="0" r="1.1" fill="${fill}"/></g>`;
@@ -826,7 +826,7 @@ function todayData(){const now=Date.now()+9*3600e3,t0=Math.floor(now/864e5)*864e
  const key=[t0,scope,S.scen,S.wx,S.fest,S.tdp,S.tdd,S.types&&Object.values(S.types).join('')].join('|');if(TDC&&TDC.key===key)return TDC;
  const HS=H.filter(h=>(scope==='nat'||h.prov===scope)&&S.types[h.type]);
  const evalDay=(di,useSel)=>{const scen=di.scen!=='none'?di.scen:(useSel&&S.scen!=='auto'?S.scen:'none'),wx=useSel?S.wx:di.wx,day=(useSel&&S.fest)?2:di.day;
-  const sd=di.y*400+di.m*31+di.d;return HS.map(h=>{const dv=0.85+0.3*h32(sd*97+h.id*13);const hrs=[];let bk=0;for(let hr=0;hr<24;hr++){hrs.push(hsModelP(h,day,hr,scen,wx)*SEA[h.type][di.m-1]*dv);bk=Math.max(bk,hsModelP(h,di.day,hr,'none',0)*SEA[h.type][di.m-1])}let pk=0,ph=0;hrs.forEach((v,i)=>{if(v>pk){pk=v;ph=i}});
+  const sd=di.y*400+di.m*31+di.d;return HS.map(h=>{const dv=0.85+0.3*h32(sd*97+h.id*13);const hrs=[];let bk=0;for(let hr=0;hr<24;hr++){hrs.push(hsModelP(h,day,hr,scen,wx)*SEA[h.type][di.m-1]*dv);bk=Math.max(bk,hsModelP(h,di.day,hr,'none',0)*SEA[h.type][di.m-1])}let pk=0,ph=0;hrs.forEach((v,i)=>{if(v>=pk-1e-9&&(v>pk+1e-9||i>=8)){pk=Math.max(pk,v);ph=i}});
    let a=ph,b=ph,s=0;while(s<22&&hrs[(a+23)%24]>=pk*0.8){a--;s++}while(s<22&&hrs[(b+1)%24]>=pk*0.8){b++;s++}a=(a+24)%24;b=b%24;const tgt=!!(SC[scen]&&SC[scen].m[h.name]),ex=pk-bk,lvp=lv(pk);const spec=ex>=0.8||tgt||di.hol;const notable=(lvp>=3&&(spec||pk>=5.5))||(lvp>=2&&spec);return {h,pk,ph,a,b,scen,wx,day,di,tgt,ex,notable}}).sort((x,y)=>y.pk-x.pk)};
  const days=tdDays(t0);const multi=days.length>1;const best=new Map(),dl=[];
  let routine=false;days.forEach(ms=>{const di=dayInfo(ms);const L=evalDay(di,ms===t0);L.forEach(x=>{if(!x.notable){if(lv(x.pk)>=2)routine=true;return}const o=best.get(x.h.id);if(!o||x.pk>o.pk)best.set(x.h.id,x)});const N=L.filter(x=>x.notable);if(N.length)dl.push({di,top:N[0],nd:N.filter(x=>lv(x.pk)===3).length})});
@@ -851,9 +851,14 @@ function renderToday(){const el=$('today');if(!el)return;const D=todayData(),di=
  o+=D.up.length?D.up.map(u=>{const l=lv(u.top.pk);return `<div class="td-up td-go" data-id="${u.top.h.id}" data-ms="${Date.UTC(u.di.y,u.di.m-1,u.di.d)}" data-ph="${u.top.ph}" tabindex="0" role="button"><span class="bd" style="background:${col(l)};color:${tcol(l)};margin-right:6px">${LV[l]}</span>${(P?TT.upiP:TT.upi)(fd(u.di),causeOf(u.di),nH(u.top.h),u.top.pk.toFixed(1))} (${T.ppl(ppl(u.top.h,u.top.pk))})</div>`}).join(''):`<div class="td-up" style="color:var(--ink3)">${D.multi?(P?TT.dayPn:TT.dayn):TT.upn}</div>`}
  o+=`<div style="font-size:11px;color:var(--ink3);margin-top:8px">${P?T.hist.note:TT.note} ${T.pplNote}</div>`;
  el.innerHTML=o;el.classList.toggle('lv3',nd.length>0);
- $('tdp-s').onchange=e=>{S.tdp=e.target.value;if(S.tdp==='date'&&!S.tdd)S.tdd=t0+864e5;renderToday()};
- const dd=$('tdp-d');if(dd)dd.onchange=e=>{const [y,m,d]=e.target.value.split('-').map(Number);if(y){S.tdd=Date.UTC(y,m-1,d);renderToday()}};
+ $('tdp-s').onchange=e=>{S.tdp=e.target.value;if(S.tdp==='date'&&!S.tdd)S.tdd=t0+864e5;renderToday();syncMapToGuide()};
+ const dd=$('tdp-d');if(dd)dd.onchange=e=>{const [y,m,d]=e.target.value.split('-').map(Number);if(y){S.tdd=Date.UTC(y,m-1,d);renderToday();syncMapToGuide()}};
  el.querySelectorAll('.td-i,.td-go').forEach(d=>{const f=()=>jumpTo(+d.dataset.id,+d.dataset.ms,+d.dataset.ph);d.onclick=f;d.onkeydown=e=>{if(e.key==='Enter')f()}})}
+function syncMapToGuide(){const D=todayData();let ms,ph,name=null;
+ if(D.list.length){const x=D.list[0];ms=Date.UTC(x.di.y,x.di.m-1,x.di.d);ph=x.ph;name=nH(x.h)}
+ else{if(S.tdp==='today')return;ms=Date.UTC(D.di.y,D.di.m-1,D.di.d);ph=peakHr(ms,PAST?PAST.hr:21)}
+ if(S.mode!=='past'){PAST=null;setMode('past')}setPastDate(ms,ph);if(S.lv!=='prov')go('prov','11');
+ const d=dayInfo(ms);toast(name?T.today.jump(`${d.m}/${d.d}(${WD[d.dow]})`,T.hf(ph),name):T.today.jump(`${d.m}/${d.d}(${WD[d.dow]})`,T.hf(ph),T.nat==='전국'?'서울특별시':nP('11')))}
 function jumpTo(id,ms,ph){if(S.mode!=='past'){PAST=null;setMode('past')}setPastDate(ms,ph);S.sel={k:'hs',id};go('mun',H[id].mun);document.querySelector('.mapcard').scrollIntoView({behavior:'smooth',block:'start'});const d=dayInfo(ms);toast(T.today.jump(`${d.m}/${d.d}(${WD[d.dow]})`,T.hf(ph),nH(H[id])))}
 function dayPeak(ms){const di=dayInfo(ms),scope=S.lv==='nat'?null:S.prov;let b=null;H.forEach(h=>{if((scope&&h.prov!==scope)||!S.types[h.type])return;for(let hr=0;hr<24;hr++){const v=hsModelP(h,di.day,hr,di.scen,di.wx)*SEA[h.type][di.m-1]+hr*1e-4;if(!b||v>b.v)b={v,hr,h}}});return b}
 function peakHr(ms,def){const b=dayPeak(ms);return b&&lv(b.v)>=2?b.hr:def}
