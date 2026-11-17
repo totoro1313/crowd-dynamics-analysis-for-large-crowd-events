@@ -165,6 +165,7 @@ dialog#about::backdrop{background:rgba(0,0,0,.5)}
 #m-live[aria-pressed="true"] .live-ic path+path{animation-delay:.3s}
 @keyframes livepulse{50%{opacity:.25}}
 @media (prefers-reduced-motion:reduce){#m-live .live-ic path{animation:none}}
+#m-man .live-ic path,#m-past .live-ic path{animation:none}
 .zlv{position:absolute;left:10px;bottom:10px;font-size:12px;color:var(--ink2);background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:2px 8px;z-index:2}
 .crumb{display:flex;flex-wrap:wrap;align-items:center;gap:4px;padding:6px 8px 2px;font-size:14px}
 .crumb button{border:0;background:transparent;padding:2px 6px;border-radius:6px;color:var(--accent)}
@@ -632,6 +633,8 @@ function drawHeatCore(){
  hctx.restore();
 }
 const LIVEIC='<svg class="live-ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="2.6" fill="currentColor" stroke="none"></circle><path d="M7.8 7.8a6 6 0 0 0 0 8.4M16.2 7.8a6 6 0 0 1 0 8.4"></path><path d="M4.6 4.6a10.5 10.5 0 0 0 0 14.8M19.4 4.6a10.5 10.5 0 0 1 0 14.8"></path></svg>';
+const CLOCKIC='<svg class="live-ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3.5 2"></path></svg>';
+const CALIC='<svg class="live-ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"></rect><path d="M3.5 10h17M8 3v4M16 3v4"></path><rect x="7.2" y="13" width="3" height="3" rx="0.6" fill="currentColor" stroke="none"></rect></svg>';
 function fitMap(){const card=document.querySelector('.mapcard'),mw=document.querySelector('.mapwrap');if(!card||!mw)return;if(innerWidth<881){mw.style.width='';return}mw.style.width='';const full=mw.clientWidth;const chrome=card.offsetHeight-mw.offsetHeight;const avail=innerHeight-24-chrome;const w=Math.max(320,Math.min(full,avail*600/640));mw.style.width=w+'px'}
 window.addEventListener('resize',()=>{fitMap();drawHeat();if(window.applyK)applyK()});
 setTimeout(()=>{fitMap();drawHeat();applyK()},50);
@@ -934,7 +937,7 @@ function applyLang(){T=I18N[LANG];LV=T.lv;DN=T.dn;WD=T.wd;TN=T.tn;document.docum
  document.querySelectorAll('[data-i]').forEach(el=>{const v=T.s[el.dataset.i];if(v!==undefined)el.textContent=v});
  document.querySelectorAll('[data-ip]').forEach(el=>{const v=T.s[el.dataset.ip];if(v!==undefined)el.placeholder=v});
  document.querySelectorAll('#lang button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.l===LANG));
- document.title=T.s.title;$('m-live').innerHTML=LIVEIC+T.mode[0];$('m-fast').textContent=T.mode[1];$('m-man').textContent=T.mode[2];$('m-past').textContent=T.mode[3];document.querySelectorAll('#pastp .chip').forEach((b,i)=>b.textContent=T.pq[i]);if(S.mode==='past')pastInfo();fillOpts();fillQL();$('hr-out').textContent=T.hf(S.manHr);$('live-txt').textContent=T.mode[MI(S.mode)];$('next').textContent=T.next(S.tick)}
+ document.title=T.s.title;$('m-live').innerHTML=LIVEIC+T.mode[0];$('m-fast').textContent=T.mode[1];$('m-man').innerHTML=CLOCKIC+T.mode[2];$('m-past').innerHTML=CALIC+T.mode[3];document.querySelectorAll('#pastp .chip').forEach((b,i)=>b.textContent=T.pq[i]);if(S.mode==='past')pastInfo();fillOpts();fillQL();$('hr-out').textContent=T.hf(S.manHr);$('live-txt').textContent=T.mode[MI(S.mode)];$('next').textContent=T.next(S.tick)}
 function setLang(l){LANG=l;setTimeout(()=>{if(window.simFill){simFill();simCalc()}},0);try{localStorage.setItem('crowd-lang',l)}catch(e){}applyLang();if(typeof DEMO!=='undefined'&&DEMO.on)$('ex-demo').querySelector('span').textContent=T.s.exstop2;applyTheme();drawMap();render();applyK();clock()}
 document.querySelectorAll('#lang button').forEach(b=>b.onclick=()=>setLang(b.dataset.l));
 document.querySelectorAll('#sortm button').forEach(b=>b.onclick=()=>{S.sortA=b.dataset.s==='a';document.querySelectorAll('#sortm button').forEach(x=>x.setAttribute('aria-pressed',x===b));render();$('rank').scrollTop=0});
