@@ -740,6 +740,7 @@ function glyph(k,fill){
  return ''}
 function iconSVG(k,edge){return k==='st'?stationSVG(CAT.st,false,edge):shapeEl(k,CAT[k],edge)+glyph(k,CAT[k])}
 function markerSVG(kind,lc,edge){return iconSVG(kind,edge)+LVDOT(lc)}
+function fixChipIcons(){const M={c:'st',x:'hub',v:'venue',m:'market',i:'mall'};document.querySelectorAll('#types .chip').forEach(b=>{const k=b.dataset.t,s=b.querySelector('svg.tic');if(!s)return;const inner=M[k]?iconSVG(M[k],'#fff'):`<circle r="10.5" fill="${css('--s0')}" stroke="#fff" stroke-width="3"/>`;s.outerHTML=`<svg class="tic" width="19" height="19" viewBox="-17 -17 34 34" aria-hidden="true">${inner}</svg>`})}
 function fixLegend(){[['lgst','st'],['lgsx','hub'],['lgtm','term'],['lgrl','rail'],['lgpk','park'],['lgml','mall'],['lgmk','market'],['lgvn','venue']].forEach(([i,k])=>{const s=document.querySelector(`[data-i="${i}"]`);const svg=s&&s.previousElementSibling;if(svg&&svg.tagName.toLowerCase()==='svg'){svg.setAttribute('viewBox','-17 -17 34 34');svg.innerHTML=iconSVG(k,'#fff')}})}
 function render(){return withFc(renderCore)}
 function renderCore(){
@@ -1054,7 +1055,7 @@ $('sim-load').onclick=simLoad;
 applyLang();
 $('theme').onchange=e=>{S.theme=e.target.value;savePref();applyTheme();drawMap();render();applyK()};
 $('dpal').onchange=e=>{S.dpal=e.target.value;savePref();applyTheme();drawMap();render();applyK()};
-applyTheme();drawMap();step();clock();applyK();fixLegend();simFill();simLoad();simAnim();
+applyTheme();drawMap();step();clock();applyK();fixLegend();fixChipIcons();simFill();simLoad();simAnim();
 setInterval(()=>{if(S.mode!=='man')clock();S.tick--;if(S.tick<=0){S.tick=5;if(S.mode==='fast'){S.simMin+=10;if(S.simMin>=1440){S.simMin-=1440;S.simDow=(S.simDow+1)%7}}step()}$('next').textContent=T.next(S.tick)},1000);
 </script>
 </body>
