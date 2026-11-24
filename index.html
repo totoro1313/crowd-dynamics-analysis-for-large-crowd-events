@@ -55,7 +55,7 @@ input[type=range]{flex:1;accent-color:var(--accent)}
 @media (max-width:880px){.grid{grid-template-columns:minmax(0,1fr)}}
 .card{background:var(--panel);border:none;border-radius:14px;padding:16px;box-shadow:0 1px 3px rgba(17,24,39,.07)}
 .mapcard{padding:8px;position:relative;align-self:start}
-.mapwrap{background:#EEF0F3}
+.mapwrap{background:#DCE8D2}
 @media (prefers-color-scheme:dark){.mapwrap{background:#181E2A}}
 .mapwrap{position:relative;overflow:hidden;border-radius:8px;touch-action:none}
 #heat{position:absolute;left:0;top:0;pointer-events:none;z-index:0}
@@ -186,7 +186,9 @@ dialog#about::backdrop{background:rgba(0,0,0,.5)}
 .brand-t{display:flex;flex-direction:column;line-height:1.1}.brand-t b{font-size:18px;letter-spacing:.01em}.brand-t small{font-size:11px;color:#4B5563;font-weight:600}
 @media (prefers-color-scheme:dark){.brand-t small{color:#B8BFCC}}
 .navr{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.hero{background:var(--panel);color:var(--ink);border-bottom:1px solid var(--line)}
+.hero{background:#E2EDF2;color:var(--ink);border-bottom:1px solid #C9DCE5}
+@media (prefers-color-scheme:dark){.hero{background:#13222B!important;border-bottom-color:#22394A}}
+.hero-r{border-left-color:#C9DCE5!important}
 .heroin{max-width:1200px;margin:0 auto;padding:34px 20px 28px;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap}
 .kicker{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;letter-spacing:.14em;color:#C8102E;margin-bottom:10px}.kicker i{display:block;width:22px;height:3px;background:#C8102E;border-radius:2px}
 .hero h1{font-size:34px;font-weight:800;color:var(--ink);margin:0;letter-spacing:-.025em;line-height:1.15}
@@ -547,7 +549,7 @@ const PHUE={'11':215,'21':195,'22':35,'23':172,'12':95,'25':248,'26':158,'29':11
 const PNICK={'11':'한강 블루','21':'바다 블루','22':'사과 앰버','23':'항구 청록','12':'남도 빛','25':'과학 인디고','26':'고래 바다색','29':'행정 초록','31':'경기 초록','32':'산맥 연두','33':'내륙 올리브','34':'들녘 황금','35':'한옥 자주','37':'신라 토색','38':'남해 물빛','39':'감귤 노랑'};
 function hueTheme(h,dark){const c=(s,l)=>d3.hsl(h,s,l).formatHex();return dark?{bg:c(.35,.08),panel:c(.3,.12),ink:c(.25,.92),ink2:c(.15,.72),ink3:c(.1,.55),line:c(.25,.2),land:c(.28,.18),'land-line':c(.25,.34),accent:c(.7,.68),'accent-bg':c(.45,.2)}
  :{bg:c(.4,.955),panel:'#FFFFFF',ink:c(.4,.12),ink2:c(.18,.35),ink3:c(.12,.52),line:c(.28,.87),land:c(.32,.87),'land-line':c(.25,.68),accent:c(.65,.4),'accent-bg':c(.6,.93)}}
-const THEMES={city:{n:'city',l:{bg:'#F3F4F6',panel:'#FFFFFF',ink:'#111827',ink2:'#374151',ink3:'#6B7280',line:'#E5E7EB',land:'#ECEBE6','land-line':'#C2C0B8',accent:'#2563EB','accent-bg':'#E8EFFD'},d:{bg:'#0B0F17',panel:'#131925',ink:'#F3F4F6',ink2:'#C9CED8',ink3:'#8B93A3',line:'#252C3A',land:'#1C2230','land-line':'#3A4254',accent:'#60A5FA','accent-bg':'#172338'}},auto:{n:'시·도별 자동',auto:true},sea:{n:'바다',l:{bg:'#EEF4F8',panel:'#FFFFFF',ink:'#0F2233',ink2:'#46607A',ink3:'#7890A6',line:'#D3E0EA',land:'#D3E3EE','land-line':'#9FBBD0',accent:'#0B6FB8','accent-bg':'#E1EEF8'},d:{bg:'#0A1622',panel:'#102233',ink:'#E3EEF6',ink2:'#A6BDD0',ink3:'#7891A6',line:'#1E3A50',land:'#183247','land-line':'#2E5470',accent:'#5AB0F0','accent-bg':'#12324D'}},
+const THEMES={city:{n:'city',l:{bg:'#EAEEE3',panel:'#FBFAF5',ink:'#1C2418',ink2:'#3F4A3A',ink3:'#6B7564',line:'#DCDDCD',land:'#F2EFE4','land-line':'#CBC3AE',accent:'#2563EB','accent-bg':'#E6EEFB'},d:{bg:'#0B0F17',panel:'#131925',ink:'#F3F4F6',ink2:'#C9CED8',ink3:'#8B93A3',line:'#252C3A',land:'#1C2230','land-line':'#3A4254',accent:'#60A5FA','accent-bg':'#172338'}},auto:{n:'시·도별 자동',auto:true},sea:{n:'바다',l:{bg:'#EEF4F8',panel:'#FFFFFF',ink:'#0F2233',ink2:'#46607A',ink3:'#7890A6',line:'#D3E0EA',land:'#D3E3EE','land-line':'#9FBBD0',accent:'#0B6FB8','accent-bg':'#E1EEF8'},d:{bg:'#0A1622',panel:'#102233',ink:'#E3EEF6',ink2:'#A6BDD0',ink3:'#7891A6',line:'#1E3A50',land:'#183247','land-line':'#2E5470',accent:'#5AB0F0','accent-bg':'#12324D'}},
  forest:{n:'숲',l:{bg:'#F1F5EF',panel:'#FFFFFF',ink:'#14261A',ink2:'#4B6352',ink3:'#7D9182',line:'#D8E3D3',land:'#DCE7D6','land-line':'#AFC3A5',accent:'#2F7D4F','accent-bg':'#E2F0E6'},d:{bg:'#0E1A12',panel:'#142419',ink:'#E4EEE6',ink2:'#A7BCAD',ink3:'#7C9283',line:'#23392A',land:'#1E3324','land-line':'#3A5A43',accent:'#6CC08E','accent-bg':'#1A3A26'}},
  night:{n:'야간',dark:true,d:{bg:'#0B0F1A',panel:'#121829',ink:'#E6E9F2',ink2:'#A9B0C6',ink3:'#7A829B',line:'#222B42',land:'#1B2338','land-line':'#33405E',accent:'#7C9CFF','accent-bg':'#1C2648'}},
  base:{n:'기본(회색)',l:{bg:'#F3F6F7',panel:'#FFFFFF',ink:'#17242C',ink2:'#4A5A63',ink3:'#7A8A92',line:'#D9E1E4',land:'#E3EAED','land-line':'#B9C6CC',accent:'#1F6FEB','accent-bg':'#E4EEFD'},d:{bg:'#0E171C',panel:'#16222A',ink:'#E5ECEF',ink2:'#A9B7BE',ink3:'#7D8C94',line:'#26353E',land:'#1D2B33','land-line':'#38505C',accent:'#5B9BFF','accent-bg':'#17304F'}}};
