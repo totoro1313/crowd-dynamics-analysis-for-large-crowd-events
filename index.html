@@ -170,6 +170,9 @@ dialog#about::backdrop{background:rgba(0,0,0,.5)}
 @keyframes livepulse{50%{opacity:.25}}
 @media (prefers-reduced-motion:reduce){#m-live .live-ic path{animation:none}}
 #m-man .live-ic path,#m-past .live-ic path{animation:none}
+#m-live{--mc:#DC2626}#m-man{--mc:#0891B2}#m-past{--mc:#7C3AED}
+#m-live[aria-pressed="true"],#m-man[aria-pressed="true"],#m-past[aria-pressed="true"]{background:var(--mc);color:#fff}
+#m-live[aria-pressed="false"] .live-ic,#m-man[aria-pressed="false"] .live-ic,#m-past[aria-pressed="false"] .live-ic{color:var(--mc)}
 #live.live{background:var(--accent-bg);color:var(--accent)}#live.live .dot{background:var(--accent)}
 #types .chip[data-t="c"]{--tc:#1E3A8A}#types .chip[data-t="n"]{--tc:#C026D3}#types .chip[data-t="t"]{--tc:#15803D}#types .chip[data-t="v"]{--tc:#0E7490}#types .chip[data-t="x"]{--tc:#EA580C}#types .chip[data-t="m"]{--tc:#92400E}#types .chip[data-t="i"]{--tc:#BE123C}
 #types .chip[aria-pressed="true"]{background:var(--tc);border-color:var(--tc);color:#fff}
