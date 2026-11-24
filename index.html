@@ -1003,19 +1003,20 @@ const dScen=v=>{$('scen').value=v;ev($('scen'),'change')};
 const dPlace=n=>{const h=H.find(x=>x.name===n);S.sel={k:'hs',id:h.id};go('mun',h.mun);return h};
 const dZoom=(h,k)=>{const [x,y]=proj([h.lon,h.lat]);d3.select('#map').transition().duration(1400).call(zoomB.transform,d3.zoomIdentity.translate(300-k*x,320-k*y).scale(k))};
 const dFc=f=>document.querySelector(`#fc button[data-f="${f}"]`).click();
+const dLive=()=>{dFc(0);if(S.mode!=='live')$('m-live').click()};
 const dHallo=()=>{const e=evList().filter(e=>e.di.scen==='halloween'&&e.di.dow===6).sort((a,b)=>Math.abs(a.k)-Math.abs(b.k))[0];return e?e.ms:todayMs()};
 const dDate=(ms,h,keep)=>{if(S.mode!=='past'){PAST=null;setMode('past')}setPastDate(ms,h);if(!keep)go('prov','11')};
 const dLang=l=>document.querySelector(`#lang button[data-l="${l}"]`).click();
 const dView=el=>{el.scrollIntoView({behavior:'smooth',block:'center'});document.querySelectorAll('.demo-hl').forEach(x=>x.classList.remove('demo-hl'));el.classList.add('demo-hl')};
 const DSTEPS=[
- {ko:'평범한 평일 저녁 7시. 서울 전역의 인파 밀집도를 한눈에 보여줍니다.',en:'A normal weekday at 7 p.m.: crowd density across Seoul, updated every 5 seconds.',run:()=>{dLang(DEMO.lang0==='ko'?'ko':DEMO.lang0);dFc(0);dScen('none');dSetMan(0,19);go('prov','11');dView(document.querySelector('.mapcard'))},d:4500},
+ {ko:'오늘 지금 이 시각, 서울 전역의 인파 밀집도를 한눈에 보여줍니다.',en:'Right now, today: crowd density across Seoul at a glance, updated every 5 seconds.',run:()=>{dLang(DEMO.lang0==='ko'?'ko':DEMO.lang0);dScen('auto');dLive();go('prov','11');dView(document.querySelector('.mapcard'))},d:4500},
  {ko:'핼러윈 주말 밤 9시. 이태원·홍대·신촌 일대가 순식간에 위험 단계로 바뀝니다.',en:'Halloween weekend, 9 p.m.: Itaewon, Hongdae and Sinchon turn to danger.',run:()=>{dDate(dHallo(),21)},d:4500},
  {ko:'위험 구역이 생기면 그 지역만 빨간 테두리로 반짝이며 강조됩니다.',en:'When danger appears, only the dangerous areas blink with a red outline.',run:()=>{},d:4000},
  {ko:'이태원역으로 확대하면 동 단위, 50m 블록 단위까지 어디가 붐비는지 볼 수 있습니다.',en:'Zoom into Itaewon Station to see density down to 50 m blocks.',run:async()=>{const h=dPlace('이태원역');await dz(500);dZoom(h,3.5)},d:5000},
  {ko:'아직 저녁 7시라도, 1시간 뒤 예측 지도로 다가올 위험을 미리 알려줍니다.',en:'Even at 7 p.m., the 1-hour forecast map warns of danger ahead.',run:async()=>{dDate(dHallo(),19,true);await dz(300);dFc(1)},d:5000},
- {ko:'외국인 관광객도 이해할 수 있도록 경고와 안내를 4개 언어로 제공합니다.',en:'Warnings and guidance are available in four languages for visitors.',run:async()=>{dFc(0);dView(document.querySelector('.mapcard'));dLang('en');await dz(1700);dLang('ja');await dz(1700);dLang('zh')},d:5500},
+ {ko:'외국인 관광객도 이해할 수 있도록 경고와 안내를 4개 언어로 제공합니다.',en:'Warnings and guidance are available in four languages for visitors.',run:async()=>{dLive();go('prov','11');dView(document.querySelector('.mapcard'));dLang('en');await dz(1700);dLang('ja');await dz(1700);dLang('zh')},d:5500},
  {ko:'주요 혼잡 행사 안내는 핌러윈·불꽃축제·연말·대형 공연처럼 사람이 크게 몰리는 날만 골라 미리 알려줍니다.',en:"The major crowd event guide lists only days when big crowds gather, like Halloween, fireworks, New Year's Eve and big concerts.",run:()=>{dLang(DEMO.lang0);dView($('today'))},d:5000},
- {ko:'CCTV 영상 → 비전 AI 인원 계산 → 위험 판정 → 지도·알림. 보행자가 스스로 위험을 피하는 지도입니다.',en:'CCTV → vision AI counting → risk detection → map and alerts: a map that helps people avoid danger.',run:()=>{dView(document.querySelector('.mapcard'));d3.select('#map').transition().duration(1000).call(zoomB.transform,d3.zoomIdentity)},d:4500}];
+ {ko:'CCTV 영상 → 비전 AI 인원 계산 → 위험 판정 → 지도·알림. 보행자가 스스로 위험을 피하는 지도입니다.',en:'CCTV → vision AI counting → risk detection → map and alerts: a map that helps people avoid danger.',run:()=>{dLive();dView(document.querySelector('.mapcard'));d3.select('#map').transition().duration(1000).call(zoomB.transform,d3.zoomIdentity)},d:4500}];
 function capShow(i){const s=DSTEPS[i];$('cap-n').textContent=`${i+1} / ${DSTEPS.length}`;$('cap-t').textContent=(DEMO.lang0||LANG)==='ko'?s.ko:s.en;$('cap').classList.add('show');
  const b=$('cap-bar');b.style.transition='none';b.style.width='0';void b.offsetWidth;b.style.transition=`width ${s.d}ms linear`;b.style.width='100%'}
 async function demoStep(){if(!DEMO.on)return;const s=DSTEPS[DEMO.i];capShow(DEMO.i);try{await s.run()}catch(e){console.error(e)}
