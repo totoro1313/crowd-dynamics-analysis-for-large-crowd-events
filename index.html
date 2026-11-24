@@ -1021,7 +1021,8 @@ function capShow(i){const s=DSTEPS[i];$('cap-n').textContent=`${i+1} / ${DSTEPS.
 async function demoStep(){if(!DEMO.on)return;const s=DSTEPS[DEMO.i];capShow(DEMO.i);try{await s.run()}catch(e){console.error(e)}
  DEMO.tm=setTimeout(()=>{if(!DEMO.on)return;DEMO.i++;if(DEMO.i>=DSTEPS.length){if($('cap-loop').checked){DEMO.i=0}else{demoStop();return}}demoStep()},s.d)}
 function demoStart(){DEMO.on=true;DEMO.i=0;DEMO.lang0=LANG;$('ex-demo').classList.add('on');$('ex-demo').querySelector('span').textContent=T.s.exstop2;demoStep()}
-function demoStop(){DEMO.on=false;clearTimeout(DEMO.tm);$('cap').classList.remove('show');$('ex-demo').classList.remove('on');$('ex-demo').querySelector('span').textContent=T.s.exdemo;document.querySelectorAll('.demo-hl').forEach(x=>x.classList.remove('demo-hl'))}
+function demoStop(){const was=DEMO.on;DEMO.on=false;clearTimeout(DEMO.tm);$('cap').classList.remove('show');$('ex-demo').classList.remove('on');$('ex-demo').querySelector('span').textContent=T.s.exdemo;document.querySelectorAll('.demo-hl').forEach(x=>x.classList.remove('demo-hl'));
+ if(was){try{if(DEMO.lang0&&DEMO.lang0!==LANG)dLang(DEMO.lang0);dFc(0);dScen('auto');$('m-live').click();go('prov','11');d3.select('#map').transition().duration(600).call(zoomB.transform,d3.zoomIdentity)}catch(e){}}}
 $('push-x').onclick=hidePush;
 $('ex-demo').onclick=()=>DEMO.on?demoStop():demoStart();
 $('cap-stop').onclick=demoStop;
