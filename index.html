@@ -171,7 +171,10 @@ dialog#about::backdrop{background:rgba(0,0,0,.5)}
 @media (prefers-reduced-motion:reduce){#m-live .live-ic path{animation:none}}
 #m-man .live-ic path,#m-past .live-ic path{animation:none}
 #live.live{background:var(--accent-bg);color:var(--accent)}#live.live .dot{background:var(--accent)}
-#types .chip[aria-pressed="false"]{color:var(--ink3);border-color:var(--line);background:var(--panel)}
+#types .chip[data-t="c"]{--tc:#1E3A8A}#types .chip[data-t="n"]{--tc:#C026D3}#types .chip[data-t="t"]{--tc:#15803D}#types .chip[data-t="v"]{--tc:#0E7490}#types .chip[data-t="x"]{--tc:#EA580C}#types .chip[data-t="m"]{--tc:#92400E}#types .chip[data-t="i"]{--tc:#BE123C}
+#types .chip[aria-pressed="true"]{background:var(--tc);border-color:var(--tc);color:#fff}
+#types .chip[aria-pressed="false"]{color:var(--tc);border-color:color-mix(in srgb,var(--tc) 35%,transparent);background:var(--panel)}
+@media (prefers-color-scheme:dark){#types .chip[aria-pressed="true"]{background:color-mix(in srgb,var(--tc) 75%,#fff);border-color:transparent;color:#0B0F17}#types .chip[aria-pressed="false"]{color:color-mix(in srgb,var(--tc) 60%,#fff)}}
 
 .topnav{position:sticky;top:0;z-index:40;background:var(--panel);box-shadow:0 1px 0 var(--line),0 2px 8px rgba(17,24,39,.05)}
 .navin{max-width:1200px;margin:0 auto;padding:10px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
